@@ -1,21 +1,20 @@
 ;; =============================================================================
 ;; Eww Dashboard Configuration
-;; Architecture: Wayland (Hyprland) | Yuck Lisp-like Syntax
 ;; =============================================================================
 
 ;; --- [ Variables (Pollers) ] -------------------------------------------------
-;; Optimizamos el polleo para no drenar la CPU/batería.
 (defpoll time :interval "10s" "date '+%H:%M'")
 (defpoll date :interval "1h" "date '+%b %d, %Y'")
 (defpoll user :interval "24h" "whoami")
 
-;; Uso de memoria (porcentaje puro)
-(defpoll mem_percent :interval "5s" "free -m | awk '/Mem/ {printf \"%d\\n\", ($3/$2) * 100}'")
-;; Uso de CPU (usamos top o vmstat simplificado)
-(defpoll cpu_percent :interval "5s" "top -b -n 1 | grep 'Cpu(s)' | awk '{print $2 + $4}'")
+;; Uso de memoria y CPU
+(defpoll mem_percent :interval "5s" :initial "0" "free -m | awk '/Mem/ {printf \"%d\\n\", ($3/$2) * 100}'")
+(defpoll cpu_percent :interval "5s" :initial "0" "top -b -n 1 | grep 'Cpu(s)' | awk '{print $2 + $4}'")
 
-;; --- [ Window Definition (Wayland Native) ] ----------------------------------
-;; Ventana flotante estilo macOS/iOS Control Center
+;; Volumen (usamos wpctl de Pipewire)
+(defpoll volume :interval "1s" :initial "0" "wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}'")
+
+;; --- [ Window Definition ] ----------------------------------
 (defwindow dashboard
     :monitor 0
     :geometry (geometry :x "15px"
@@ -35,14 +34,14 @@
        :space-evenly false
        :spacing 20
     (profile)
-    (sys_resources)))
+    (sys_resources)
+    (audio_slider)))
 
 (defwidget profile []
   (box :class "profile-box"
        :orientation "h"
        :space-evenly false
        :spacing 15
-    ;; (image :path "/ruta/a/tu/avatar.png" :image-width 60 :image-height 60)
     (box :class "avatar-placeholder" "")
     (box :orientation "v" :space-evenly false :valign "center"
       (label :class "greeting" :text "Hola, ${user}!" :halign "start")
@@ -50,21 +49,33 @@
 
 (defwidget sys_resources []
   (box :class "sys-box" :orientation "v" :spacing 15
+    (label :class "section-title" :text "Recursos" :halign "start")
     (box :class "sys-row" :orientation "h" :space-evenly true
       ;; CPU Circular
-      (box :class "circular-container" :orientation "v" :space-evenly false :spacing 5
+      (box :class "circular-container" :orientation "v" :space-evenly false :spacing 5 :halign "center"
         (circular-progress :value cpu_percent
                            :class "cpu-circle"
                            :thickness 8
-                           :start-at 75
           (label :class "circle-icon" :text ""))
         (label :class "circle-label" :text "CPU"))
       
       ;; RAM Circular
-      (box :class "circular-container" :orientation "v" :space-evenly false :spacing 5
+      (box :class "circular-container" :orientation "v" :space-evenly false :spacing 5 :halign "center"
         (circular-progress :value mem_percent
                            :class "ram-circle"
                            :thickness 8
-                           :start-at 75
           (label :class "circle-icon" :text ""))
         (label :class "circle-label" :text "RAM")))))
+
+(defwidget audio_slider []
+  (box :class "audio-box" :orientation "v" :spacing 10
+    (label :class "section-title" :text "Volumen" :halign "start")
+    (box :orientation "h" :space-evenly false :spacing 10
+      (label :class "vol-icon" :text "󰕾")
+      (scale :class "vol-scale"
+             :min 0
+             :max 101
+             :value volume
+             :onchange "wpctl set-volume @DEFAULT_AUDIO_SINK@ {}%"
+             :hexpand true)
+      (label :class "vol-percent" :text "${volume}%"))))
