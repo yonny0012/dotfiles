@@ -1,0 +1,27 @@
+// ============================================
+// Layout y Estructura del Dashboard
+// ============================================
+
+.dashboard-container {
+  background-color: $bg-primary;
+  border-radius: $radius;
+  padding: $padding-lg;
+  border: 1px solid $bg-tertiary;
+  
+  // Sombra sutil para Wayland
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.section-box {
+  background-color: $bg-secondary;
+  border-radius: $radius;
+  padding: $padding-md;
+}
+
+.metric-row {
+  padding: $padding-sm 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid $bg-tertiary;
+  }
+}

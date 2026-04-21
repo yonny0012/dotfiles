@@ -1,0 +1,53 @@
+;; ============================================
+;; Controles de Medios: Volumen y Brillo
+;; ============================================
+
+;; Polls para estado actual
+(defpoll volume_level :interval "1s" "sh ~/.config/eww/scripts/volume.sh get")
+(defpoll volume_icon :interval "1s" "sh ~/.config/eww/scripts/volume.sh icon")
+(defpoll brightness_level :interval "1s" "sh ~/.config/eww/scripts/brightness.sh get")
+(defpoll brightness_icon :interval "1s" "sh ~/.config/eww/scripts/brightness.sh icon")
+
+(defwidget media-controls []
+  (box
+    :class "media-box"
+    :orientation "v"
+    :spacing 12
+    :space-evenly false
+    
+    ;; Título
+    (box
+      :orientation "h"
+      :space-evenly false
+      (label :text "󰕾" :class "media-icon vol")
+      (label :text "Controles" :class "metric-label" :xalign 0.0))
+    
+    ;; Volumen
+    (box
+      :orientation "h"
+      :spacing 10
+      :space-evenly false
+      :valign "center"
+      (button
+        :onclick "sh ~/.config/eww/scripts/volume.sh toggle"
+        (label :text volume_icon :class "media-icon vol"))
+      (scale
+        :class "media-slider vol"
+        :value volume_level
+        :max 100
+        :onchange "sh ~/.config/eww/scripts/volume.sh set {}")
+      (label :text "${volume_level}%" :class "metric-value" :width 40))
+    
+    ;; Brillo
+    (box
+      :orientation "h"
+      :spacing 10
+      :space-evenly false
+      :valign "center"
+      (label :text brightness_icon :class "media-icon bright")
+      (scale
+        :class "media-slider bright"
+        :value brightness_level
+        :max 100
+        :onchange "sh ~/.config/eww/scripts/brightness.sh set {}")
+      (label :text "${brightness_level}%" :class "metric-value" :width 40))))

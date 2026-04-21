@@ -1,0 +1,113 @@
+// ============================================
+// Estilos de Widgets Individuales
+// ============================================
+
+// --- Métricas del Sistema ---
+.metric-label {
+  color: $fg-secondary;
+  font-size: $font-size-small;
+  min-width: 50px;
+}
+
+.metric-value {
+  color: $fg-primary;
+  font-weight: bold;
+  font-size: $font-size-normal;
+}
+
+.metric-bar {
+  background-color: $bg-tertiary;
+  border-radius: $radius;
+  min-height: 8px;
+  min-width: 120px;
+  
+  trough {
+    background-color: $bg-tertiary;
+    border-radius: $radius;
+    min-height: 8px;
+    
+    progress {
+      border-radius: $radius;
+      min-height: 8px;
+    }
+  }
+}
+
+// Colores específicos por métrica
+.bar-cpu progress { background-color: $accent-cpu; }
+.bar-ram progress { background-color: $accent-ram; }
+.bar-disk progress { background-color: $accent-disk; }
+.bar-net progress { background-color: $accent-net; }
+.bar-gpu progress { background-color: $accent-gpu; }
+
+// Iconos de métricas
+.metric-icon {
+  font-size: $font-size-icon;
+  min-width: 24px;
+  
+  &.cpu { color: $accent-cpu; }
+  &.ram { color: $accent-ram; }
+  &.disk { color: $accent-disk; }
+  &.net { color: $accent-net; }
+  &.gpu { color: $accent-gpu; }
+}
+
+// --- Controles de Medios (Volumen/Brillo) ---
+.media-box {
+  background-color: $bg-secondary;
+  border-radius: $radius;
+  padding: $padding-md;
+}
+
+.media-icon {
+  font-size: $font-size-icon;
+  min-width: 28px;
+  
+  &.vol { color: $accent-vol; }
+  &.bright { color: $accent-bright; }
+}
+
+.media-slider {
+  trough {
+    background-color: $bg-tertiary;
+    border-radius: $radius;
+    min-height: 10px;
+    
+    highlight {
+      border-radius: $radius;
+    }
+  }
+  
+  &.vol highlight { background-color: $accent-vol; }
+  &.bright highlight { background-color: $accent-bright; }
+}
+
+// --- Botones de Sesión ---
+.session-box {
+  background-color: $bg-secondary;
+  border-radius: $radius;
+  padding: $padding-md;
+}
+
+.session-btn {
+  background-color: $bg-tertiary;
+  border-radius: $radius;
+  padding: $padding-md;
+  min-width: 60px;
+  min-height: 40px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: $bg-hover;
+    transform: scale(1.05);
+  }
+  
+  label {
+    font-size: $font-size-icon;
+  }
+  
+  &.power { color: $accent-power; }
+  &.reboot { color: $accent-reboot; }
+  &.lock { color: $accent-lock; }
+  &.logout { color: $accent-logout; }
+}

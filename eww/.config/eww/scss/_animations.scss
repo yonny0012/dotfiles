@@ -1,0 +1,20 @@
+// ============================================
+// Transiciones y Animaciones
+// ============================================
+
+// Hover suave en botones
+.session-btn,
+.metric-row {
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Animación de carga para barras de progreso
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.metric-bar progress {
+  animation: pulse 2s ease-in-out infinite;
+}
