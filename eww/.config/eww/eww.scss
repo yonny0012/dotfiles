@@ -1,0 +1,89 @@
+/* =============================================================================
+ * Eww Stylesheet (SCSS)
+ * Pattern: Glassmorphism Modern Dark
+ * Colors: Catppuccin Macchiato
+ * Typography: JetBrainsMono Nerd Font
+ * ========================================================================== */
+
+* {
+    all: unset;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    color: #cad3f5; /* Text */
+}
+
+/* La ventana principal hereda el blur de Hyprland (ver rules.conf) */
+window {
+    background-color: transparent;
+}
+
+.dashboard-container {
+    background-color: rgba(36, 39, 58, 0.6); /* Surface0 */
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    padding: 20px;
+}
+
+/* --- [ Perfil ] ------------------------------------------------------------ */
+.profile-box {
+    background-color: rgba(30, 32, 48, 0.4); /* Mantle */
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.avatar-placeholder {
+    font-size: 32px;
+    color: #8aadf4; /* Blue */
+    background-color: rgba(138, 173, 244, 0.1);
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.greeting {
+    font-size: 18px;
+    font-weight: bold;
+    color: #cad3f5;
+}
+
+.date-time {
+    font-size: 12px;
+    color: #b8c0e0;
+    margin-top: 4px;
+}
+
+/* --- [ Recursos del Sistema ] ---------------------------------------------- */
+.sys-box {
+    background-color: rgba(30, 32, 48, 0.4); /* Mantle */
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.circular-container {
+    align-items: center;
+}
+
+/* Base de los círculos (Gris opaco) */
+.cpu-circle, .ram-circle {
+    background-color: rgba(91, 96, 120, 0.3); /* Surface2 */
+}
+
+/* Color dinámico: Azul pastel para CPU */
+.cpu-circle {
+    color: #8aadf4;
+}
+
+/* Color dinámico: Morado pastel para RAM */
+.ram-circle {
+    color: #c6a0f6;
+}
+
+.circle-icon {
+    font-size: 20px;
+    color: #f4dbd6; /* Rosewater */
+}
+
+.circle-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #a5adce; /* Subtext0 */
+}

@@ -1,0 +1,158 @@
+/* =============================================================================
+ * Waybar Stylesheet (CSS)
+ * Pattern: Glassmorphism Modern Dark
+ * Colors: Catppuccin Macchiato
+ * Typography: Fira Code / Fira Sans (Fallback to System UI)
+ * ========================================================================== */
+
+* {
+    /* Typographic hierarchy dictated by ui-ux-pro-max */
+    font-family: "JetBrainsMono Nerd Font", "Fira Code", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    /* Remove padding globally, apply per-element for predictability */
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    /* True Glassmorphism: Dark base with heavy transparency 
+       (Hyprland handles the actual backdrop-filter blur via layerrule) */
+    background: rgba(36, 39, 58, 0.4); 
+    color: #cad3f5; /* Text */
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* subtle shadow */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* --- [ Modules Container Logic ] -------------------------------------------- */
+/* Grouping for clean spacing */
+.modules-left, .modules-center, .modules-right {
+    margin: 4px;
+    background: transparent;
+}
+
+/* Ensure all clickable modules have pointer (UX rules) */
+#workspaces button,
+#clock,
+#pulseaudio,
+#network,
+#battery,
+#tray,
+#custom-power,
+#custom-launcher {
+    padding: 0 12px;
+    margin: 0 4px;
+    background: rgba(30, 32, 48, 0.6); /* Mantle (darker) */
+    color: #cad3f5;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+/* Hover states (Smooth transitions required by UI/UX guide) */
+#workspaces button:hover,
+#clock:hover,
+#pulseaudio:hover,
+#network:hover,
+#battery:hover,
+#tray:hover,
+#custom-power:hover,
+#custom-launcher:hover {
+    background: rgba(91, 96, 120, 0.8); /* Surface2 */
+    color: #f4dbd6; /* Rosewater */
+    box-shadow: 0 0 10px rgba(183, 189, 248, 0.2);
+}
+
+/* --- [ Specific Module Styling ] -------------------------------------------- */
+#custom-launcher {
+    color: #8aadf4; /* Blue accent */
+    font-size: 16px;
+    padding-right: 14px;
+    margin-left: 2px;
+}
+
+/* Workspaces */
+#workspaces {
+    background: transparent;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    margin: 0 2px;
+    font-size: 16px;
+}
+
+#workspaces button.active {
+    background: rgba(198, 160, 246, 0.2); /* Mauve transparent */
+    color: #c6a0f6; /* Mauve solid */
+    border: 1px solid rgba(198, 160, 246, 0.4);
+}
+
+#workspaces button.urgent {
+    background: rgba(237, 135, 150, 0.2); /* Red transparent */
+    color: #ed8796; /* Red solid */
+    border: 1px solid rgba(237, 135, 150, 0.4);
+}
+
+/* Window Title */
+#window {
+    margin-left: 12px;
+    font-weight: 400;
+    color: #b8c0e0; /* Subtext1 */
+}
+
+/* Center Clock */
+#clock {
+    font-weight: 600;
+    color: #8aadf4; /* Blue */
+    background: rgba(138, 173, 244, 0.1);
+}
+
+/* Right Indicators */
+#pulseaudio {
+    color: #eed49f; /* Yellow */
+}
+#pulseaudio.muted {
+    color: #ed8796; /* Red */
+}
+
+#network {
+    color: #a6da95; /* Green */
+}
+#network.disconnected {
+    color: #ed8796; /* Red */
+}
+
+#battery {
+    color: #8bd5ca; /* Teal */
+}
+#battery.charging {
+    color: #a6da95; /* Green */
+}
+#battery.warning {
+    color: #f5a97f; /* Peach */
+    background: rgba(245, 169, 127, 0.1);
+}
+#battery.critical {
+    color: #ed8796; /* Red */
+    background: rgba(237, 135, 150, 0.2);
+    animation: blink 2s linear infinite;
+}
+
+#custom-power {
+    color: #ed8796; /* Red accent for closing/Eww */
+    margin-right: 2px;
+    font-size: 16px;
+    padding: 0 14px;
+}
+
+/* Animations */
+@keyframes blink {
+    to {
+        background-color: rgba(237, 135, 150, 0.6);
+        color: #24273a;
+    }
+}
