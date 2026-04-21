@@ -1,0 +1,181 @@
+// ============================================
+// EWW Dashboard - Estilos Completos
+// Un solo archivo, sin imports para evitar errores de ruta
+// ============================================
+
+// --- Variables ---
+$bg-primary: #2e3440;
+$bg-secondary: #3b4252;
+$bg-tertiary: #434c5e;
+$bg-hover: #4c566a;
+$fg-primary: #eceff4;
+$fg-secondary: #d8dee9;
+
+$accent-cpu: #bf616a;
+$accent-ram: #a3be8c;
+$accent-disk: #ebcb8b;
+$accent-net: #81a1c1;
+$accent-gpu: #b48ead;
+$accent-vol: #d08770;
+$accent-bright: #e5e9f0;
+$accent-power: #bf616a;
+$accent-reboot: #ebcb8b;
+$accent-lock: #a3be8c;
+$accent-logout: #81a1c1;
+
+$radius: 12px;
+$padding-sm: 6px;
+$padding-md: 12px;
+$padding-lg: 16px;
+
+// --- Reset y Base ---
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", sans-serif;
+  font-size: 14px;
+}
+
+// --- Contenedor Principal ---
+.dashboard-container {
+  background-color: $bg-primary;
+  border-radius: $radius;
+  padding: $padding-lg;
+  border: 1px solid $bg-tertiary;
+}
+
+// --- Secciones ---
+.section-box {
+  background-color: $bg-secondary;
+  border-radius: $radius;
+  padding: $padding-md;
+}
+
+.section-icon {
+  font-size: 18px;
+  color: $fg-primary;
+}
+
+.section-title {
+  color: $fg-primary;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+// --- Filas de Métricas ---
+.metric-row {
+  padding: $padding-sm 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $bg-tertiary;
+  }
+}
+
+.metric-icon {
+  font-size: 18px;
+  min-width: 24px;
+
+  &.cpu { color: $accent-cpu; }
+  &.ram { color: $accent-ram; }
+  &.disk { color: $accent-disk; }
+  &.net { color: $accent-net; }
+  &.gpu { color: $accent-gpu; }
+}
+
+.metric-label {
+  color: $fg-secondary;
+  font-size: 13px;
+  min-width: 50px;
+}
+
+.metric-value {
+  color: $fg-primary;
+  font-weight: bold;
+}
+
+// --- Barras de Progreso ---
+.metric-bar {
+  trough {
+    background-color: $bg-tertiary;
+    border-radius: $radius;
+    min-height: 8px;
+    min-width: 120px;
+
+    progress {
+      border-radius: $radius;
+      min-height: 8px;
+    }
+  }
+
+  &.cpu progress { background-color: $accent-cpu; }
+  &.ram progress { background-color: $accent-ram; }
+  &.disk progress { background-color: $accent-disk; }
+  &.gpu progress { background-color: $accent-gpu; }
+}
+
+// --- Red ---
+.net-down {
+  color: $accent-ram;
+  font-size: 12px;
+}
+
+.net-up {
+  color: $accent-cpu;
+  font-size: 12px;
+}
+
+// --- Medios (Volumen/Brillo) ---
+.media-btn {
+  background: transparent;
+  padding: 0;
+}
+
+.media-icon {
+  font-size: 18px;
+  min-width: 28px;
+
+  &.vol { color: $accent-vol; }
+  &.bright { color: $accent-bright; }
+}
+
+.media-slider {
+  trough {
+    background-color: $bg-tertiary;
+    border-radius: $radius;
+    min-height: 10px;
+
+    highlight {
+      border-radius: $radius;
+    }
+  }
+
+  &.vol highlight { background-color: $accent-vol; }
+  &.bright highlight { background-color: $accent-bright; }
+}
+
+.media-value {
+  color: $fg-primary;
+  font-weight: bold;
+}
+
+// --- Botones de Sesión ---
+.session-btn {
+  background-color: $bg-tertiary;
+  border-radius: $radius;
+  padding: $padding-md;
+  min-width: 60px;
+  min-height: 40px;
+  transition: all 200ms ease;
+
+  &:hover {
+    background-color: $bg-hover;
+  }
+
+  label {
+    font-size: 18px;
+  }
+
+  &.power { color: $accent-power; }
+  &.reboot { color: $accent-reboot; }
+  &.lock { color: $accent-lock; }
+  &.logout { color: $accent-logout; }
+}

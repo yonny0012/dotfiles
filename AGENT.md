@@ -64,9 +64,10 @@ El repositorio utiliza una estructura modular compatible con **GNU Stow**.
 **Layouts**: Definir layouts específicos para desarrollo (ej. dev.kdl) que integren Kitty + Fish.
 
 ---
+
 ## 🔄 Flujo de Trabajo y Mantenimiento
 
-### Protocolo de Modificación:
+### Protocolo de Modificación
 
 **Análisis**: Antes de editar, verificar dependencias (ej. si un cambio en Waybar requiere un script nuevo).
 
@@ -78,7 +79,7 @@ El repositorio utiliza una estructura modular compatible con **GNU Stow**.
 - **Waybar**: `killall waybar && waybar` &
 - **Fish**: `source ~/.config/fish/config.fish`
 
-### Formato de Commits (Conventional Commits):
+### Formato de Commits (Conventional Commits)
 
 - **feat(scope)**: Nueva funcionalidad o configuración.
 - **fix(scope)**: Corrección de un error o bind roto.
@@ -92,3 +93,10 @@ Al sugerir cambios, el asistente debe:
 1. **Respetar la jerarquía de Stow**: Siempre proponer la ruta dentro de `~/dotfiles/[paquete]/.config/...`.
 2. **Prevenir Breaking Changes**: Avisar si una configuración depende de una versión específica de un paquete que podría ser demasiado nueva para los repositorios de Debian Stable.
 3. **Documentar**: Incluir comentarios breves en los archivos de configuración explicando el propósito de reglas complejas.
+
+## Herramientas
+
+### **MCP**
+
+1. **engram**: memoria persistenete de contexto, lee y escribe
+2. **Context7**: documentacion actualizada. consulta para cualquier libreria, herramienta o framework
