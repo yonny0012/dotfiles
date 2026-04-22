@@ -1,0 +1,16 @@
+# Wofi - Configuración base
+# Asegura que se carguen iconos de aplicaciones
+
+width=480
+height=320
+mode=drun
+prompt=Buscar...
+term=kitty
+allow_images=true
+image_size=24
+insensitive=true
+location=center
+no_actions=true
+orientation=vertical
+matching=fuzzy
+gtk_dark=true

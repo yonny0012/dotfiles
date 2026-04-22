@@ -1,0 +1,118 @@
+/* 
+ * Wofi - Tema Glassmórfico Minimalista
+ * Requiere: compositor con soporte blur (Hyprland/wlroots)
+ * Paleta: Neutros con acento sutil
+ */
+
+/* ─── Variables de paleta ─── */
+@define-color bg        rgba(20, 20, 25, 0.65);
+@define-color bg-hover  rgba(255, 255, 255, 0.08);
+@define-color bg-select  rgba(255, 255, 255, 0.12);
+@define-color fg        #e8e8e8;
+@define-color fg-dim    #888888;
+@define-color accent    #7aa2f7;
+@define-color border    rgba(255, 255, 255, 0.15);
+
+/* ─── Ventana principal ─── */
+window {
+    background-color: @bg;
+    border: 1.5px solid @border;
+    border-radius: 16px;
+    padding: 12px;
+    /* Glassmorphism: blur se maneja desde el compositor (Hyprland) */
+    /* Asegúrate de tener blur activado en tu conf de Hyprland para esta ventana */
+}
+
+/* ─── Caja contenedora ─── */
+#outer-box {
+    padding: 0;
+    margin: 0;
+}
+
+/* ─── Input de búsqueda ─── */
+#input {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid @border;
+    border-radius: 12px;
+    color: @fg;
+    font-family: "JetBrainsMono Nerd Font", "monospace";
+    font-size: 14px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    outline: none;
+    box-shadow: none;
+}
+
+#input:focus {
+    border-color: @accent;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Lista de resultados ─── */
+#scroll {
+    background: transparent;
+    border: none;
+    margin: 0;
+}
+
+/* ─── Items individuales ─── */
+#entry {
+    background: transparent;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin: 2px 0;
+    color: @fg;
+    font-family: "JetBrainsMono Nerd Font", "sans-serif";
+    font-size: 13px;
+}
+
+#entry:hover {
+    background-color: @bg-hover;
+    outline: none;
+}
+
+#entry:selected {
+    background-color: @bg-select;
+    border: 1px solid rgba(122, 162, 247, 0.3);
+    outline: none;
+}
+
+/* ─── Iconos ─── */
+#img {
+    margin-right: 12px;
+    border-radius: 6px;
+}
+
+/* ─── Texto del item ─── */
+#text {
+    color: @fg;
+    font-weight: 500;
+}
+
+/* ─── Texto seleccionado ─── */
+#entry:selected #text {
+    color: #ffffff;
+}
+
+/* ─── Texto no coincidente (fuzzy matching) ─── */
+#unselected {
+    color: @fg-dim;
+}
+
+/* ─── Scrollbar minimalista ─── */
+scrollbar {
+    background: transparent;
+    border: none;
+    width: 4px;
+    margin-right: 2px;
+}
+
+scrollbar slider {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    min-height: 20px;
+}
+
+scrollbar slider:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
