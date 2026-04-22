@@ -7,7 +7,7 @@
   `sh -c 'top -bn1 | grep "Cpu(s)" | awk "{print int(\\$2 + \\$4)}" | grep -o "[0-9]*" || echo "0"'`)
 
 (defpoll mem_percent :interval "2s"
-  `sh -c 'free | awk "/Mem:/ {printf \\"%.0f\\", (\\$3/\\$2) * 100}"'`)
+  `sh -c 'free | awk "/Mem:/ {printf \\"%.0f\\", (\\$3/\\$2) * 100}" || echo "0"'`)
 
 (defpoll disk_percent :interval "30s"
   `sh -c 'df -h / | awk "NR==2 {print int(\\$5)}"'`)
@@ -23,7 +23,7 @@
 
 ;; --- PIPEWIRE (Volumen) ---
 (defpoll volume :interval "500ms"
-  `sh -c 'wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk "{print int(\\$2 * 100)}"'`)
+  `sh -c 'wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk "{print int(\\$2 * 100)}" || echo "0"'`)
 
 (defpoll volume_muted :interval "500ms"
   `sh -c 'wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q MUTED && echo "true" || echo "false"'`)
@@ -70,11 +70,11 @@
       :space-evenly false
       (label :text "󰍛" :class "section-icon")
       (label :text "Sistema" :class "section-title"))
-    (metric-row :icon "󰘚" :label "CPU" :value "${cpu_percent}%" :percent cpu_percent :color-class "cpu")
-    (metric-row :icon "󰍛" :label "RAM" :value "${mem_percent}%" :percent mem_percent :color-class "ram")
-    (metric-row :icon "󰋊" :label "Disco" :value "${disk_percent}%" :percent disk_percent :color-class "disk")
+    (metric-row :icon "󰘚" :label "CPU" :value "${cpu_percent}%" :percent {cpu_percent} :color-class "cpu")
+    (metric-row :icon "󰍛" :label "RAM" :value "${mem_percent}%" :percent {mem_percent} :color-class "ram")
+    (metric-row :icon "󰋊" :label "Disco" :value "${disk_percent}%" :percent {disk_percent} :color-class "disk")
     (net-row)
-    (metric-row :icon "󰢮" :label "GPU" :value "${gpu_percent}%" :percent gpu_percent :color-class "gpu")))
+    (metric-row :icon "󰢮" :label "GPU" :value "${gpu_percent}%" :percent {gpu_percent} :color-class "gpu")))
 
 (defwidget metric-row [icon label value percent color-class]
   (box
@@ -91,8 +91,7 @@
       :spacing 8
       (progress
         :class "metric-bar ${color-class}"
-        :value percent
-        :max 100)
+        :value {percent ?: 0})
       (label :text value :class "metric-value" :width 45))))
 
 (defwidget net-row []
@@ -140,11 +139,11 @@
     (button
       :onclick "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
       :class "media-btn"
-      (label :text "${volume_muted == 'true' ? '󰖁' : (volume < 30 ? '󰕿' : (volume < 70 ? '󰖀' : '󰕾'))}" :class "media-icon vol"))
+      (label :text "${volume_muted == 'true' ? '󰖁' : ((volume ?: 0) < 30 ? '󰕿' : ((volume ?: 0) < 70 ? '󰖀' : '󰕾'))}" :class "media-icon vol"))
     (scale
       :orientation "h"
       :class "media-slider vol"
-      :value {volume != "" ? volume : 0}
+      :value {volume ?: 0}
       :min 0
       :max 100
       :onchange "wpctl set-volume @DEFAULT_AUDIO_SINK@ {}%")
@@ -157,11 +156,11 @@
     :space-evenly false
     :valign "center"
     :vexpand false
-    (label :text "${brightness < 30 ? '󰃚' : (brightness < 70 ? '󰃛' : '󰃜')}" :class "media-icon bright")
+    (label :text "${(brightness ?: 0) < 30 ? '󰃚' : ((brightness ?: 0) < 70 ? '󰃛' : '󰃜')}" :class "media-icon bright")
     (scale
       :orientation "h"
       :class "media-slider bright"
-      :value {brightness != "" ? brightness : 0}
+      :value {brightness ?: 0}
       :min 0
       :max 100
       :onchange "brightnessctl set {}%")

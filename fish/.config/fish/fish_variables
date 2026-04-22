@@ -2,4 +2,4 @@
 # VERSION: 3.0
 SETUVAR --export ANDROID_HOME:/home/devshw/Android/Sdk
 SETUVAR __fish_initialized:4300
-SETUVAR fish_user_paths:/usr/local/bin\x1e/usr/bin\x1e/bin\x1e/usr/local/games\x1e/usr/games\x1e/home/devshw/\x2eopencode/bin\x1e/home/devshw/\x2ecargo/bin\x1e/home/devshw/\x2elocal/bin
+SETUVAR fish_user_paths:/home/devshw/Android/Sdk/platform\x2dtools\x1e/home/devshw/Android/Sdk/cmdline\x2dtools/latest/bin\x1e/usr/local/bin\x1e/usr/bin\x1e/bin\x1e/usr/local/games\x1e/usr/games\x1e/home/devshw/\x2eopencode/bin\x1e/home/devshw/\x2ecargo/bin\x1e/home/devshw/\x2elocal/bin
