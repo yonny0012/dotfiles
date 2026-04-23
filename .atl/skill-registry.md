@@ -1,16 +1,37 @@
+# Agent Teams Lite — Skill Registry
 
-## Skill Registry
+## Project Standards (auto-resolved)
 
-This registry provides a unified view of all AI skills and conventions active in this project. It is automatically generated and should not be edited manually.
+<!-- These compact rules are injected into context during execution. -->
 
-### Project Conventions
+**Architecture & Stack**:
+- OS: Debian (Wayland)
+- WM: Hyprland
+- Status: Waybar
+- UI: Eww
+- Terminal: Kitty
+- Shell: Fish
+- Multiplexer: Zellij
+- Manager: GNU Stow
 
-- **Source:** `AGENT.md`
-  - **Path:** `/home/devshw/Workspace/shw-dotfiles/AGENT.md`
+**Core Rules**:
+- Strict Modularity: Each app in its own root folder (`~/dotfiles/[package]/.config/`).
+- Stow Symlinking: Do not manually copy; use `stow <package>` from the repo root.
+- No Secrets: Do not commit API keys or passwords.
+- Atomic Commits: One app/change per commit. Use Conventional Commits.
+- UI/Eww: Use modular SCSS. Scripts go to `~/.local/bin` or within the package.
 
-### User Skills
+## Loaded Skills
 
-- **dotfiles-best-practices**
-  - **Path:** `/home/devshw/Workspace/shw-dotfiles/.agents/skills/dotfiles-best-practices/SKILL.md`
-  - **Triggers:**
-    - Provides reference knowledge about modern CLI tools, shell optimization patterns, and dotfiles security best practices. Make sure to use this skill whenever the user asks about shell patterns, modern tool alternatives (eza, bat, fd, ripgrep), zsh optimization, or dotfiles conventions. Also loaded automatically by the dotfiles-optimizer skill.
+| Skill | Trigger Context | Source |
+|-------|-----------------|--------|
+| branch-pr | Creating a pull request, opening a PR | global |
+| go-testing | Go testing patterns, Bubbletea | global |
+| issue-creation | Creating GitHub issue, reporting bug | global |
+| judgment-day | Dual adversarial review | global |
+| skill-creator | Creating new AI skills | global |
+| skill-registry | Updating or generating skill registry | global |
+
+## Known Project Conventions
+
+- `AGENT.md` (Main agent configuration and rules)

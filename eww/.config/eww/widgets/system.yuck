@@ -1,89 +1,107 @@
 ;; ============================================
-;; Widget de Monitoreo del Sistema
-;; CPU, RAM, Disco, Red, GPU
+;; System Metrics — Circular Progress
 ;; ============================================
 
-(defpoll cpu_usage :interval "1s" "sh ~/.config/eww/scripts/sysinfo.sh cpu")
-(defpoll ram_usage :interval "2s" "sh ~/.config/eww/scripts/sysinfo.sh ram")
-(defpoll disk_usage :interval "30s" "sh ~/.config/eww/scripts/sysinfo.sh disk")
-(defpoll net_usage :interval "2s" "sh ~/.config/eww/scripts/sysinfo.sh net")
-(defpoll gpu_usage :interval "2s" "sh ~/.config/eww/scripts/sysinfo.sh gpu")
+;; --- JSON stream from metric_collector ---
+(deflisten metrics
+  :initial '{"cpu":0,"ram":0,"disk":0,"gpu":0,"net":0,"cpu_freq":"--","ram_used_gb":"0","ram_total_gb":"0","disk_used_gb":"0","disk_total_gb":"0","gpu_temp":"--","net_down_speed":"0 B/s","net_up_speed":"0 B/s"}'
+  `~/.config/eww/scripts/metric_collector.sh stream`)
 
-(defwidget system-monitor []
+;; --- Reusable circular metric widget ---
+(defwidget circular-metric [value icon label detail color-class]
+  (box
+    :class "circular-metric"
+    :orientation "v"
+    :spacing 2
+    :space-evenly false
+    :halign "center"
+    (overlay
+      (circular-progress
+        :class "metric-circle ${color-class}"
+        :value {value ?: 0}
+        :thickness 5
+        :start-at 75
+        :clockwise true)
+      (label :text "${value}%" :class "circle-value"))
+    (box
+      :orientation "h"
+      :spacing 4
+      :halign "center"
+      (label :text icon :class "circle-icon")
+      (label :text label :class "circle-label"))
+    (label :text detail :class "circle-detail")))
+
+;; --- System section ---
+(defwidget system-section []
   (box
     :class "section-box"
     :orientation "v"
-    :spacing 10
+    :spacing 8
     :space-evenly false
-    ;; Título de sección
-    (box
-      :orientation "h"
-      :space-evenly false
-      (label :text "󰍛" :class "metric-icon cpu")
-      (label :text "Sistema" :class "metric-label" :xalign 0.0))
-    
-    ;; CPU
-    (metric-row
-      :icon "󰘚"
-      :icon-class "cpu"
-      :label "CPU"
-      :value "${cpu_usage}%"
-      :bar-class "bar-cpu"
-      :bar-value cpu_usage)
-    
-    ;; RAM
-    (metric-row
-      :icon "󰍛"
-      :icon-class "ram"
-      :label "RAM"
-      :value "${ram_usage}%"
-      :bar-class "bar-ram"
-      :bar-value ram_usage)
-    
-    ;; Disco
-    (metric-row
-      :icon "󰋊"
-      :icon-class "disk"
-      :label "Disco"
-      :value "${disk_usage}%"
-      :bar-class "bar-disk"
-      :bar-value disk_usage)
-    
-    ;; Red
-    (metric-row
-      :icon "󰤨"
-      :icon-class "net"
-      :label "Red"
-      :value "${net_usage}"
-      :bar-class "bar-net"
-      :bar-value "0") ;; La red usa texto, no barra porcentual
-    
-    ;; GPU (requiere nvidia-smi o similar)
-    (metric-row
-      :icon "󰢮"
-      :icon-class "gpu"
-      :label "GPU"
-      :value "${gpu_usage}%"
-      :bar-class "bar-gpu"
-      :bar-value gpu_usage)))
 
-;; Widget reutilizable para cada métrica
-(defwidget metric-row [icon icon-class label value bar-class bar-value]
-  (box
-    :class "metric-row"
-    :orientation "h"
-    :spacing 10
-    :space-evenly false
-    :valign "center"
-    (label :text icon :class "metric-icon ${icon-class}")
-    (label :text label :class "metric-label")
+    ;; Header
     (box
-      :hexpand true
-      :halign "end"
+      :class "section-header"
       :orientation "h"
       :spacing 8
-      (progress
-        :class "metric-bar ${bar-class}"
-        :value bar-value
-        :max 100)
-      (label :text value :class "metric-value" :width 50))))
+      :space-evenly false
+      (label :text "󰍛" :class "section-icon")
+      (label :text "Sistema" :class "section-title"))
+
+    ;; Circular metrics — 2x2 grid
+    (box
+      :orientation "v"
+      :spacing 8
+      :space-evenly false
+
+      ;; Row 1: CPU + RAM
+      (box
+        :orientation "h"
+        :spacing 12
+        :space-evenly true
+        (circular-metric
+          :value {metrics.cpu}
+          :icon "󰘚"
+          :label "CPU"
+          :detail "${metrics.cpu_freq} GHz"
+          :color-class "cpu")
+        (circular-metric
+          :value {metrics.ram}
+          :icon "󰍛"
+          :label "RAM"
+          :detail "${metrics.ram_used_gb}/${metrics.ram_total_gb} GB"
+          :color-class "ram"))
+
+      ;; Row 2: Disk + GPU
+      (box
+        :orientation "h"
+        :spacing 12
+        :space-evenly true
+        (circular-metric
+          :value {metrics.disk}
+          :icon "󰋊"
+          :label "Disco"
+          :detail "${metrics.disk_used_gb}/${metrics.disk_total_gb} GB"
+          :color-class "disk")
+        (circular-metric
+          :value {metrics.gpu}
+          :icon "󰢮"
+          :label "GPU"
+          :detail "${metrics.gpu_temp}"
+          :color-class "gpu")))
+
+    ;; Network row
+    (box
+      :class "net-row"
+      :orientation "h"
+      :spacing 10
+      :space-evenly false
+      :valign "center"
+      (label :text "󰤨" :class "net-icon")
+      (label :text "Red" :class "net-label")
+      (box
+        :hexpand true
+        :halign "end"
+        :spacing 12
+        (label :text "↓ ${metrics.net_down_speed}" :class "net-speed net-down")
+        (label :text "↑ ${metrics.net_up_speed}" :class "net-speed net-up")))))

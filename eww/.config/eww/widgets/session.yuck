@@ -1,35 +1,39 @@
 ;; ============================================
-;; Botones de Control de Sesión
+;; Session Control Buttons
 ;; ============================================
 
-(defwidget session-controls []
+(defwidget session-section []
   (box
-    :class "session-box"
+    :class "section-box session-box"
     :orientation "h"
     :spacing 10
     :space-evenly true
     :halign "center"
-    
+
     ;; Cerrar sesión
     (button
       :class "session-btn logout"
-      :onclick "loginctl terminate-user $USER"
+      :onclick "hyprctl dispatch exit || loginctl terminate-user $USER"
+      :tooltip "Cerrar sesión"
       (label :text "󰍃"))
-    
+
     ;; Bloquear pantalla
     (button
       :class "session-btn lock"
       :onclick "swaylock || loginctl lock-session"
+      :tooltip "Bloquear"
       (label :text "󰌾"))
-    
+
     ;; Reiniciar
     (button
       :class "session-btn reboot"
       :onclick "systemctl reboot"
+      :tooltip "Reiniciar"
       (label :text "󰜉"))
-    
+
     ;; Apagar
     (button
       :class "session-btn power"
       :onclick "systemctl poweroff"
+      :tooltip "Apagar"
       (label :text "󰐥"))))

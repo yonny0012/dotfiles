@@ -1,111 +1,149 @@
 // ============================================
-// Estilos de Widgets Individuales
+// Widget Styles — Circles, Sliders, Buttons
 // ============================================
 
-// --- Métricas del Sistema ---
-.metric-label {
-  color: $fg-secondary;
-  font-size: $font-size-small;
-  min-width: 50px;
+// --- Circular System Metrics ---
+.circular-metric {
+  min-width: $circle-size;
 }
 
-.metric-value {
-  color: $fg-primary;
+.metric-circle {
+  min-width: $circle-size;
+  min-height: $circle-size;
+  background-color: transparent;
+  // Track color (unfilled portion)
+  color: $bg-tertiary;
+
+  &.cpu { color: rgba($accent-cpu, 0.25); }
+  &.ram { color: rgba($accent-ram, 0.25); }
+  &.disk { color: rgba($accent-disk, 0.25); }
+  &.gpu { color: rgba($accent-gpu, 0.25); }
+}
+
+// The circular-progress foreground uses background-color in GTK
+circular-progress {
+  &.cpu { background-color: $accent-cpu; }
+  &.ram { background-color: $accent-ram; }
+  &.disk { background-color: $accent-disk; }
+  &.gpu { background-color: $accent-gpu; }
+}
+
+.circle-value {
+  font-size: $font-size-circle-value;
   font-weight: bold;
-  font-size: $font-size-normal;
+  color: $fg-primary;
 }
 
-.metric-bar {
-  background-color: $bg-tertiary;
-  border-radius: $radius;
-  min-height: 8px;
-  min-width: 120px;
-  
-  trough {
-    background-color: $bg-tertiary;
-    border-radius: $radius;
-    min-height: 8px;
-    
-    progress {
-      border-radius: $radius;
-      min-height: 8px;
-    }
-  }
+.circle-icon {
+  font-size: $font-size-small;
+  color: $fg-secondary;
 }
 
-// Colores específicos por métrica
-.bar-cpu progress { background-color: $accent-cpu; }
-.bar-ram progress { background-color: $accent-ram; }
-.bar-disk progress { background-color: $accent-disk; }
-.bar-net progress { background-color: $accent-net; }
-.bar-gpu progress { background-color: $accent-gpu; }
+.circle-label {
+  font-size: $font-size-small;
+  font-weight: bold;
+  color: $fg-secondary;
+}
 
-// Iconos de métricas
-.metric-icon {
+.circle-detail {
+  font-size: $font-size-xs;
+  color: $fg-detail;
+}
+
+// --- Network ---
+.net-row {
+  padding: $padding-sm $padding-sm;
+  border-top: 1px solid $glass-border;
+  margin-top: 4px;
+}
+
+.net-icon {
   font-size: $font-size-icon;
-  min-width: 24px;
-  
-  &.cpu { color: $accent-cpu; }
-  &.ram { color: $accent-ram; }
-  &.disk { color: $accent-disk; }
-  &.net { color: $accent-net; }
-  &.gpu { color: $accent-gpu; }
+  color: $accent-net;
 }
 
-// --- Controles de Medios (Volumen/Brillo) ---
-.media-box {
-  background-color: $bg-secondary;
-  border-radius: $radius;
-  padding: $padding-md;
+.net-label {
+  font-size: $font-size-small;
+  color: $fg-secondary;
 }
 
+.net-speed {
+  font-size: $font-size-small;
+  font-weight: bold;
+}
+
+.net-down { color: $accent-ram; }
+.net-up { color: $accent-cpu; }
+
+// --- Media Sliders ---
 .media-icon {
   font-size: $font-size-icon;
   min-width: 28px;
-  
+
   &.vol { color: $accent-vol; }
   &.bright { color: $accent-bright; }
 }
 
 .media-slider {
+  min-height: 20px;
+
   trough {
     background-color: $bg-tertiary;
-    border-radius: $radius;
-    min-height: 10px;
-    
+    border-radius: $radius-sm;
+    min-height: 8px;
+
     highlight {
-      border-radius: $radius;
+      border-radius: $radius-sm;
+      min-height: 8px;
+    }
+
+    slider {
+      min-width: 14px;
+      min-height: 14px;
+      border-radius: 50%;
+      margin: -3px 0;
     }
   }
-  
-  &.vol highlight { background-color: $accent-vol; }
-  &.bright highlight { background-color: $accent-bright; }
+
+  &.vol trough highlight { background-color: $accent-vol; }
+  &.bright trough highlight { background-color: $accent-bright; }
+
+  &.vol trough slider { background-color: $accent-vol; }
+  &.bright trough slider { background-color: $accent-bright; }
 }
 
-// --- Botones de Sesión ---
-.session-box {
-  background-color: $bg-secondary;
-  border-radius: $radius;
-  padding: $padding-md;
-}
+.media-btn {
+  border-radius: $radius-sm;
+  padding: 4px;
 
-.session-btn {
-  background-color: $bg-tertiary;
-  border-radius: $radius;
-  padding: $padding-md;
-  min-width: 60px;
-  min-height: 40px;
-  transition: all 0.2s ease;
-  
   &:hover {
     background-color: $bg-hover;
-    transform: scale(1.05);
   }
-  
+}
+
+.media-value {
+  font-weight: bold;
+  font-size: $font-size-small;
+  color: $fg-primary;
+}
+
+// --- Session Buttons ---
+.session-btn {
+  background-color: rgba(67, 76, 94, 0.6);
+  border-radius: $radius;
+  padding: $padding-md;
+  min-width: 56px;
+  min-height: 40px;
+  border: 1px solid $glass-border;
+
+  &:hover {
+    background-color: $bg-hover;
+  }
+
   label {
     font-size: $font-size-icon;
   }
-  
+
   &.power { color: $accent-power; }
   &.reboot { color: $accent-reboot; }
   &.lock { color: $accent-lock; }

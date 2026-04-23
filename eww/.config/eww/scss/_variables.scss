@@ -1,13 +1,20 @@
 // ============================================
-// Variables de Color y Métricas
+// Design Tokens — Nord-based Premium Palette
 // ============================================
 
+// Backgrounds
 $bg-primary: #2e3440;
 $bg-secondary: #3b4252;
 $bg-tertiary: #434c5e;
 $bg-hover: #4c566a;
 
-// Colores de estado
+// Foregrounds
+$fg-primary: #eceff4;
+$fg-secondary: #d8dee9;
+$fg-muted: #4c566a;
+$fg-detail: #81a1c1;
+
+// Accent colors (metrics)
 $accent-cpu: #bf616a;
 $accent-ram: #a3be8c;
 $accent-disk: #ebcb8b;
@@ -15,19 +22,32 @@ $accent-net: #81a1c1;
 $accent-gpu: #b48ead;
 $accent-vol: #d08770;
 $accent-bright: #e5e9f0;
+
+// Session accents
 $accent-power: #bf616a;
 $accent-reboot: #ebcb8b;
 $accent-lock: #a3be8c;
 $accent-logout: #81a1c1;
 
-// Tipografía
+// Glass effect
+$glass-bg: rgba(59, 66, 82, 0.85);
+$glass-border: rgba(136, 192, 208, 0.15);
+$glass-shadow: rgba(0, 0, 0, 0.4);
+
+// Typography
+$font-size-xs: 10px;
 $font-size-small: 12px;
 $font-size-normal: 14px;
 $font-size-large: 16px;
 $font-size-icon: 18px;
+$font-size-circle-value: 13px;
 
-// Espaciado
+// Spacing
 $padding-sm: 6px;
 $padding-md: 12px;
 $padding-lg: 16px;
 $radius: 12px;
+$radius-sm: 8px;
+
+// Circular progress
+$circle-size: 64px;

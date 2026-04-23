@@ -9,7 +9,16 @@ set -euo pipefail
 #   "cpu": <0-100>,
 #   "ram": <0-100>,
 #   "disk": <0-100>,
+#   "gpu": <0-100>,
 #   "net": <0-100>,
+#   "cpu_freq": "<GHz string>",
+#   "ram_used_gb": "<used GB>",
+#   "ram_total_gb": "<total GB>",
+#   "disk_used_gb": "<used GB>",
+#   "disk_total_gb": "<total GB>",
+#   "gpu_temp": "<temp string>",
+#   "net_down_speed": "<human readable>",
+#   "net_up_speed": "<human readable>",
 #   "stale": {"cpu": <bool>, "ram": <bool>, "disk": <bool>, "net": <bool>}
 # }
 #
@@ -55,11 +64,21 @@ LAST_TS=${LAST_TS:-0}
 LAST_SUCCESS_TS=${LAST_SUCCESS_TS:-0}
 PREV_CPU_TOTAL=${PREV_CPU_TOTAL:-0}
 PREV_CPU_IDLE=${PREV_CPU_IDLE:-0}
-PREV_NET_TOTAL=${PREV_NET_TOTAL:-0}
+PREV_NET_RX=${PREV_NET_RX:-0}
+PREV_NET_TX=${PREV_NET_TX:-0}
 CPU_LAST=${CPU_LAST:-0}
 RAM_LAST=${RAM_LAST:-0}
 DISK_LAST=${DISK_LAST:-0}
 NET_LAST=${NET_LAST:-0}
+GPU_LAST=${GPU_LAST:-0}
+CPU_FREQ_LAST=${CPU_FREQ_LAST:-0}
+RAM_USED_GB_LAST=${RAM_USED_GB_LAST:-0}
+RAM_TOTAL_GB_LAST=${RAM_TOTAL_GB_LAST:-0}
+DISK_USED_GB_LAST=${DISK_USED_GB_LAST:-0}
+DISK_TOTAL_GB_LAST=${DISK_TOTAL_GB_LAST:-0}
+GPU_TEMP_LAST=${GPU_TEMP_LAST:---}
+NET_DOWN_SPEED_LAST=${NET_DOWN_SPEED_LAST:-0 B/s}
+NET_UP_SPEED_LAST=${NET_UP_SPEED_LAST:-0 B/s}
 EOF
 }
 
@@ -84,6 +103,17 @@ cpu_percent() {
   clamp_0_100 "$result"
 }
 
+cpu_freq() {
+  # Current average CPU frequency in GHz
+  local freq_mhz
+  freq_mhz=$(awk '/^cpu MHz/ {sum += $4; n++} END {if (n > 0) printf "%.1f", sum / n / 1000; else print "0"}' /proc/cpuinfo 2>/dev/null)
+  if [[ -z "$freq_mhz" || "$freq_mhz" == "0" ]]; then
+    # Fallback to lscpu
+    freq_mhz=$(lscpu 2>/dev/null | awk '/^CPU.*MHz/ {printf "%.1f", $NF / 1000; exit}')
+  fi
+  printf '%s\n' "${freq_mhz:-0}"
+}
+
 ram_percent() {
   local total available
   total=$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)
@@ -98,6 +128,16 @@ ram_percent() {
   clamp_0_100 "$pct"
 }
 
+ram_detail() {
+  local total available used
+  total=$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)
+  available=$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)
+  used=$((total - available))
+  # kB to GB with one decimal
+  RAM_USED_GB_LAST=$(awk "BEGIN {printf \"%.1f\", ${used} / 1048576}")
+  RAM_TOTAL_GB_LAST=$(awk "BEGIN {printf \"%.1f\", ${total} / 1048576}")
+}
+
 disk_percent() {
   local used_pct
   used_pct=$(df -P / | awk 'NR==2 {gsub(/%/, "", $5); print $5}')
@@ -108,29 +148,90 @@ disk_percent() {
   clamp_0_100 "$used_pct"
 }
 
+disk_detail() {
+  local used_kb total_kb
+  read -r used_kb total_kb <<< "$(df -P / | awk 'NR==2 {print $3, $2}')"
+  DISK_USED_GB_LAST=$(awk "BEGIN {printf \"%.0f\", ${used_kb:-0} / 1048576}")
+  DISK_TOTAL_GB_LAST=$(awk "BEGIN {printf \"%.0f\", ${total_kb:-0} / 1048576}")
+}
+
+gpu_percent() {
+  if command -v nvidia-smi &>/dev/null; then
+    nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -n1 | tr -d ' '
+  elif [[ -f /sys/class/drm/card0/device/gpu_busy_percent ]]; then
+    cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null
+  else
+    echo "0"
+  fi
+}
+
+gpu_temp() {
+  if command -v nvidia-smi &>/dev/null; then
+    local temp
+    temp=$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits 2>/dev/null | head -n1 | tr -d ' ')
+    printf '%s°C\n' "${temp:-N/A}"
+  elif [[ -d /sys/class/hwmon ]]; then
+    # Try to find GPU temperature from hwmon
+    local temp_file
+    for hwmon_dir in /sys/class/hwmon/hwmon*/; do
+      if grep -qi 'amdgpu\|radeon\|gpu' "${hwmon_dir}name" 2>/dev/null; then
+        temp_file="${hwmon_dir}temp1_input"
+        if [[ -f "$temp_file" ]]; then
+          local raw
+          raw=$(cat "$temp_file" 2>/dev/null)
+          printf '%s°C\n' "$((raw / 1000))"
+          return
+        fi
+      fi
+    done
+    echo "N/A"
+  else
+    echo "N/A"
+  fi
+}
+
+format_speed() {
+  local bytes_per_sec="$1"
+  if (( bytes_per_sec >= 1048576 )); then
+    awk "BEGIN {printf \"%.1f MB/s\", ${bytes_per_sec} / 1048576}"
+  elif (( bytes_per_sec >= 1024 )); then
+    awk "BEGIN {printf \"%.0f KB/s\", ${bytes_per_sec} / 1024}"
+  else
+    printf '%s B/s\n' "$bytes_per_sec"
+  fi
+}
+
 net_percent() {
-  local rx tx now_total now_ts
+  local rx tx now_ts
   rx=$(awk -F '[: ]+' '/:/ && $1 !~ /lo/ {sum += $3} END {print sum+0}' /proc/net/dev)
   tx=$(awk -F '[: ]+' '/:/ && $1 !~ /lo/ {sum += $11} END {print sum+0}' /proc/net/dev)
-  now_total=$((rx + tx))
   now_ts=$(date +%s)
 
   local pct=0
-  if [[ -n "${PREV_NET_TOTAL:-}" && -n "${LAST_TS:-}" ]]; then
-    local delta_bytes=$((now_total - PREV_NET_TOTAL))
+  local down_bps=0
+  local up_bps=0
+
+  if [[ -n "${PREV_NET_RX:-}" && -n "${PREV_NET_TX:-}" && -n "${LAST_TS:-}" ]]; then
+    local delta_rx=$((rx - PREV_NET_RX))
+    local delta_tx=$((tx - PREV_NET_TX))
     local delta_t=$((now_ts - LAST_TS))
-    if (( delta_bytes < 0 )); then
-      delta_bytes=0
-    fi
+    [[ $delta_rx -lt 0 ]] && delta_rx=0
+    [[ $delta_tx -lt 0 ]] && delta_tx=0
+
     if (( delta_t > 0 )); then
-      local bytes_per_sec=$((delta_bytes / delta_t))
+      down_bps=$((delta_rx / delta_t))
+      up_bps=$((delta_tx / delta_t))
+      local total_bps=$((down_bps + up_bps))
       if (( NET_CAP_BYTES_PER_SEC > 0 )); then
-        pct=$(( (bytes_per_sec * 100) / NET_CAP_BYTES_PER_SEC ))
+        pct=$(( (total_bps * 100) / NET_CAP_BYTES_PER_SEC ))
       fi
     fi
   fi
 
-  PREV_NET_TOTAL=$now_total
+  PREV_NET_RX=$rx
+  PREV_NET_TX=$tx
+  NET_DOWN_SPEED_LAST=$(format_speed "$down_bps")
+  NET_UP_SPEED_LAST=$(format_speed "$up_bps")
   clamp_0_100 "$pct"
 }
 
@@ -141,11 +242,13 @@ emit_snapshot() {
   LAST_SUCCESS_TS="${LAST_SUCCESS_TS:-0}"
   PREV_CPU_TOTAL="${PREV_CPU_TOTAL:-0}"
   PREV_CPU_IDLE="${PREV_CPU_IDLE:-0}"
-  PREV_NET_TOTAL="${PREV_NET_TOTAL:-0}"
+  PREV_NET_RX="${PREV_NET_RX:-0}"
+  PREV_NET_TX="${PREV_NET_TX:-0}"
   CPU_LAST="${CPU_LAST:-0}"
   RAM_LAST="${RAM_LAST:-0}"
   DISK_LAST="${DISK_LAST:-0}"
   NET_LAST="${NET_LAST:-0}"
+  GPU_LAST="${GPU_LAST:-0}"
 
   LAST_TS=$(date +%s)
   local ok=true
@@ -154,6 +257,13 @@ emit_snapshot() {
   if ! RAM_LAST=$(ram_percent); then ok=false; fi
   if ! DISK_LAST=$(disk_percent); then ok=false; fi
   if ! NET_LAST=$(net_percent); then ok=false; fi
+  if ! GPU_LAST=$(gpu_percent); then ok=false; fi
+
+  # Detail metrics
+  CPU_FREQ_LAST=$(cpu_freq)
+  ram_detail
+  disk_detail
+  GPU_TEMP_LAST=$(gpu_temp)
 
   if [[ "${ok}" == "true" ]]; then
     LAST_SUCCESS_TS=$LAST_TS
@@ -169,12 +279,21 @@ emit_snapshot() {
 
   write_state
 
-  printf '{"ts":%s,"cpu":%s,"ram":%s,"disk":%s,"net":%s,"stale":{"cpu":%s,"ram":%s,"disk":%s,"net":%s}}\n' \
+  printf '{"ts":%s,"cpu":%s,"ram":%s,"disk":%s,"gpu":%s,"net":%s,"cpu_freq":"%s","ram_used_gb":"%s","ram_total_gb":"%s","disk_used_gb":"%s","disk_total_gb":"%s","gpu_temp":"%s","net_down_speed":"%s","net_up_speed":"%s","stale":{"cpu":%s,"ram":%s,"disk":%s,"net":%s}}\n' \
     "$LAST_TS" \
     "${CPU_LAST:-0}" \
     "${RAM_LAST:-0}" \
     "${DISK_LAST:-0}" \
+    "${GPU_LAST:-0}" \
     "${NET_LAST:-0}" \
+    "${CPU_FREQ_LAST:-0}" \
+    "${RAM_USED_GB_LAST:-0}" \
+    "${RAM_TOTAL_GB_LAST:-0}" \
+    "${DISK_USED_GB_LAST:-0}" \
+    "${DISK_TOTAL_GB_LAST:-0}" \
+    "${GPU_TEMP_LAST:---}" \
+    "${NET_DOWN_SPEED_LAST:-0 B/s}" \
+    "${NET_UP_SPEED_LAST:-0 B/s}" \
     "$STALE_BOOL" "$STALE_BOOL" "$STALE_BOOL" "$STALE_BOOL"
 }
 
@@ -182,25 +301,22 @@ emit_value() {
   local key="$1"
   emit_snapshot >/dev/null
   case "$key" in
-    cpu)
-      printf '%s\n' "${CPU_LAST:-0}"
-      ;;
-    ram)
-      printf '%s\n' "${RAM_LAST:-0}"
-      ;;
-    disk)
-      printf '%s\n' "${DISK_LAST:-0}"
-      ;;
-    net)
-      printf '%s\n' "${NET_LAST:-0}"
-      ;;
-    ts)
-      printf '%s\n' "${LAST_TS:-0}"
-      ;;
-    stale.cpu|stale.ram|stale.disk|stale.net)
-      printf '%s\n' "$STALE_BOOL"
-      ;;
-    status.cpu|status.ram|status.disk|status.net)
+    cpu)            printf '%s\n' "${CPU_LAST:-0}" ;;
+    ram)            printf '%s\n' "${RAM_LAST:-0}" ;;
+    disk)           printf '%s\n' "${DISK_LAST:-0}" ;;
+    net)            printf '%s\n' "${NET_LAST:-0}" ;;
+    gpu)            printf '%s\n' "${GPU_LAST:-0}" ;;
+    cpu_freq)       printf '%s\n' "${CPU_FREQ_LAST:-0}" ;;
+    ram_used_gb)    printf '%s\n' "${RAM_USED_GB_LAST:-0}" ;;
+    ram_total_gb)   printf '%s\n' "${RAM_TOTAL_GB_LAST:-0}" ;;
+    disk_used_gb)   printf '%s\n' "${DISK_USED_GB_LAST:-0}" ;;
+    disk_total_gb)  printf '%s\n' "${DISK_TOTAL_GB_LAST:-0}" ;;
+    gpu_temp)       printf '%s\n' "${GPU_TEMP_LAST:---}" ;;
+    net_down_speed) printf '%s\n' "${NET_DOWN_SPEED_LAST:-0 B/s}" ;;
+    net_up_speed)   printf '%s\n' "${NET_UP_SPEED_LAST:-0 B/s}" ;;
+    ts)             printf '%s\n' "${LAST_TS:-0}" ;;
+    stale.*)        printf '%s\n' "$STALE_BOOL" ;;
+    status.*)
       if [[ "$STALE_BOOL" == "true" ]]; then
         printf 'STALE\n'
       else
@@ -214,25 +330,12 @@ emit_value() {
   esac
 }
 
-usage() {
-  cat <<'EOF'
-Usage:
-  metric_collector.sh snapshot
-  metric_collector.sh value <cpu|ram|disk|net|ts|stale.cpu|stale.ram|stale.disk|stale.net|status.cpu|status.ram|status.disk|status.net>
-  metric_collector.sh read <cpu|ram|disk|net|ts|stale.cpu|stale.ram|stale.disk|stale.net|status.cpu|status.ram|status.disk|status.net>
-EOF
-}
-
 emit_cached_value() {
   local key="$1"
   read_state
 
   LAST_TS="${LAST_TS:-0}"
   LAST_SUCCESS_TS="${LAST_SUCCESS_TS:-0}"
-  CPU_LAST="${CPU_LAST:-0}"
-  RAM_LAST="${RAM_LAST:-0}"
-  DISK_LAST="${DISK_LAST:-0}"
-  NET_LAST="${NET_LAST:-0}"
 
   local now_ts
   now_ts=$(date +%s)
@@ -244,25 +347,22 @@ emit_cached_value() {
   fi
 
   case "$key" in
-    cpu)
-      printf '%s\n' "${CPU_LAST:-0}"
-      ;;
-    ram)
-      printf '%s\n' "${RAM_LAST:-0}"
-      ;;
-    disk)
-      printf '%s\n' "${DISK_LAST:-0}"
-      ;;
-    net)
-      printf '%s\n' "${NET_LAST:-0}"
-      ;;
-    ts)
-      printf '%s\n' "${LAST_TS:-0}"
-      ;;
-    stale.cpu|stale.ram|stale.disk|stale.net)
-      printf '%s\n' "$stale"
-      ;;
-    status.cpu|status.ram|status.disk|status.net)
+    cpu)            printf '%s\n' "${CPU_LAST:-0}" ;;
+    ram)            printf '%s\n' "${RAM_LAST:-0}" ;;
+    disk)           printf '%s\n' "${DISK_LAST:-0}" ;;
+    net)            printf '%s\n' "${NET_LAST:-0}" ;;
+    gpu)            printf '%s\n' "${GPU_LAST:-0}" ;;
+    cpu_freq)       printf '%s\n' "${CPU_FREQ_LAST:-0}" ;;
+    ram_used_gb)    printf '%s\n' "${RAM_USED_GB_LAST:-0}" ;;
+    ram_total_gb)   printf '%s\n' "${RAM_TOTAL_GB_LAST:-0}" ;;
+    disk_used_gb)   printf '%s\n' "${DISK_USED_GB_LAST:-0}" ;;
+    disk_total_gb)  printf '%s\n' "${DISK_TOTAL_GB_LAST:-0}" ;;
+    gpu_temp)       printf '%s\n' "${GPU_TEMP_LAST:---}" ;;
+    net_down_speed) printf '%s\n' "${NET_DOWN_SPEED_LAST:-0 B/s}" ;;
+    net_up_speed)   printf '%s\n' "${NET_UP_SPEED_LAST:-0 B/s}" ;;
+    ts)             printf '%s\n' "${LAST_TS:-0}" ;;
+    stale.*)        printf '%s\n' "$stale" ;;
+    status.*)
       if [[ "$stale" == "true" ]]; then
         printf 'STALE\n'
       else
@@ -276,11 +376,32 @@ emit_cached_value() {
   esac
 }
 
+usage() {
+  cat <<'EOF'
+Usage:
+  metric_collector.sh snapshot
+  metric_collector.sh stream
+  metric_collector.sh value <key>
+  metric_collector.sh read <key>
+
+Keys: cpu, ram, disk, net, gpu, cpu_freq, ram_used_gb, ram_total_gb,
+      disk_used_gb, disk_total_gb, gpu_temp, net_down_speed, net_up_speed,
+      ts, stale.*, status.*
+EOF
+}
+
 main() {
   local command="${1:-snapshot}"
   case "$command" in
     snapshot)
       emit_snapshot
+      ;;
+    stream)
+      # Continuous JSON stream for eww deflisten
+      while true; do
+        emit_snapshot
+        sleep 2
+      done
       ;;
     value)
       if [[ -z "${2:-}" ]]; then

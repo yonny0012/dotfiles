@@ -1,37 +1,44 @@
 #!/usr/bin/env bash
 # ============================================
 # Control de volumen para Eww
-# Requiere: pamixer (apt install pamixer)
+# Requiere: wireplumber (wpctl)
 # ============================================
 
 case "$1" in
   get)
-    pamixer --get-volume 2>/dev/null || echo "0"
+    wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null \
+      | awk '{print int($2 * 100)}' || echo "0"
     ;;
-  
+
   icon)
-    if pamixer --get-mute &>/dev/null; then
+    local_output=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null)
+    if echo "$local_output" | grep -q MUTED; then
       echo "󰖁"  # Mute
     else
-      vol=$(pamixer --get-volume)
-      if [ "$vol" -eq 0 ]; then
+      vol=$(echo "$local_output" | awk '{print int($2 * 100)}')
+      if [ "${vol:-0}" -eq 0 ]; then
         echo "󰕿"
-      elif [ "$vol" -lt 50 ]; then
+      elif [ "${vol:-0}" -lt 50 ]; then
         echo "󰖀"
       else
         echo "󰕾"
       fi
     fi
     ;;
-  
+
   toggle)
-    pamixer -t
+    wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
     ;;
-  
+
   set)
-    pamixer --set-volume "$2"
+    # Clamp to 150% max (wpctl allows > 100%)
+    local_val="${2:-0}"
+    if [ "$local_val" -gt 150 ] 2>/dev/null; then
+      local_val=150
+    fi
+    wpctl set-volume @DEFAULT_AUDIO_SINK@ "${local_val}%"
     ;;
-  
+
   *)
     echo "Uso: $0 {get|icon|toggle|set <valor>}"
     exit 1

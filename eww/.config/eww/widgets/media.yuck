@@ -1,53 +1,73 @@
 ;; ============================================
-;; Controles de Medios: Volumen y Brillo
+;; Media Controls: Volumen y Brillo (wpctl + brightnessctl)
 ;; ============================================
 
-;; Polls para estado actual
-(defpoll volume_level :interval "1s" "sh ~/.config/eww/scripts/volume.sh get")
-(defpoll volume_icon :interval "1s" "sh ~/.config/eww/scripts/volume.sh icon")
-(defpoll brightness_level :interval "1s" "sh ~/.config/eww/scripts/brightness.sh get")
-(defpoll brightness_icon :interval "1s" "sh ~/.config/eww/scripts/brightness.sh icon")
+;; --- Polls para estado actual ---
+(defpoll volume_level :interval "500ms"
+  `wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | awk '{print int($2 * 100)}' || echo '0'`)
 
-(defwidget media-controls []
+(defpoll volume_muted :interval "500ms"
+  `wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | grep -q MUTED && echo 'true' || echo 'false'`)
+
+(defpoll brightness_level :interval "500ms"
+  `brightnessctl -m 2>/dev/null | awk -F, '{print int($4)}' || echo '100'`)
+
+;; --- Media section ---
+(defwidget media-section []
   (box
-    :class "media-box"
+    :class "section-box"
     :orientation "v"
     :spacing 12
     :space-evenly false
-    
-    ;; Título
+
+    ;; Header
     (box
+      :class "section-header"
       :orientation "h"
+      :spacing 8
       :space-evenly false
-      (label :text "󰕾" :class "media-icon vol")
-      (label :text "Controles" :class "metric-label" :xalign 0.0))
-    
-    ;; Volumen
+      (label :text "󰕾" :class "section-icon")
+      (label :text "Controles" :class "section-title"))
+
+    ;; Volume
     (box
       :orientation "h"
       :spacing 10
       :space-evenly false
       :valign "center"
+      :vexpand false
       (button
-        :onclick "sh ~/.config/eww/scripts/volume.sh toggle"
-        (label :text volume_icon :class "media-icon vol"))
+        :onclick "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        :class "media-btn"
+        (label
+          :text "${volume_muted == 'true' ? '󰖁' : ((volume_level ?: 0) < 30 ? '󰕿' : ((volume_level ?: 0) < 70 ? '󰖀' : '󰕾'))}"
+          :class "media-icon vol"))
       (scale
+        :orientation "h"
         :class "media-slider vol"
-        :value volume_level
+        :hexpand true
+        :value {volume_level ?: 0}
+        :min 0
         :max 100
-        :onchange "sh ~/.config/eww/scripts/volume.sh set {}")
-      (label :text "${volume_level}%" :class "metric-value" :width 40))
-    
-    ;; Brillo
+        :onchange "wpctl set-volume @DEFAULT_AUDIO_SINK@ {}%")
+      (label :text "${volume_level}%" :class "media-value" :width 45))
+
+    ;; Brightness
     (box
       :orientation "h"
       :spacing 10
       :space-evenly false
       :valign "center"
-      (label :text brightness_icon :class "media-icon bright")
+      :vexpand false
+      (label
+        :text "${(brightness_level ?: 0) < 30 ? '󰃚' : ((brightness_level ?: 0) < 70 ? '󰃛' : '󰃜')}"
+        :class "media-icon bright")
       (scale
+        :orientation "h"
         :class "media-slider bright"
-        :value brightness_level
+        :hexpand true
+        :value {brightness_level ?: 0}
+        :min 0
         :max 100
-        :onchange "sh ~/.config/eww/scripts/brightness.sh set {}")
-      (label :text "${brightness_level}%" :class "metric-value" :width 40))))
+        :onchange "brightnessctl set {}%")
+      (label :text "${brightness_level}%" :class "media-value" :width 45))))
