@@ -36,6 +36,13 @@ set -g fish_pager_color_prefix f5bde6
 set -g fish_pager_color_completion cad3f5
 set -g fish_pager_color_description 5b6078
 
+# Iniciar Hyprland automáticamente en tty1
+if status is-login
+    if test (tty) = "/dev/tty1"
+        exec start-hyprland
+    end
+end
+
 # --- [ Inicialización de Prompt (Starship) ] ----------------------------------
 if type -q starship
     starship init fish | source
