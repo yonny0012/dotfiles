@@ -150,6 +150,58 @@ Formatos soportados:
 
 ---
 
+## 🛠️ Hyprland Keybind Troubleshooting
+
+Si `Super+W` o `Super+T` tardan demasiado (por ejemplo ~25s), validá por capas:
+
+1. **Bind activo en Hyprland**
+   ```bash
+   hyprctl binds
+   ```
+
+2. **Contexto Wayland de la sesión**
+   ```bash
+   echo "$WAYLAND_DISPLAY"
+   echo "$XDG_CURRENT_DESKTOP"
+   ```
+
+3. **Logs recientes de usuario (DBus/portal/runtime)**
+   ```bash
+   journalctl --user -n 50
+   ```
+
+4. **Aislar app vs keybind**
+   ```bash
+   eww open --toggle dashboard
+   kitty
+   ```
+
+### Nota importante sobre DBus/Portal en Wayland
+
+En esta configuración ya se importa entorno Wayland al iniciar Hyprland:
+
+```conf
+exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec-once = systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec-once = eww daemon
+```
+
+Si persiste un delay largo, suele ser conflicto de portales (`xdg-desktop-portal-gnome`/`kde` junto a Hyprland).
+
+Opciones recomendadas:
+- dejar sólo `xdg-desktop-portal-hyprland` como backend principal, o
+- reiniciar portales manualmente en sesión activa:
+
+```bash
+killall -q xdg-desktop-portal-hyprland xdg-desktop-portal-gnome xdg-desktop-portal-kde xdg-desktop-portal
+# En Debian, el binario puede estar en /usr/lib o /usr/libexec según paquete/versión.
+/usr/lib/xdg-desktop-portal-hyprland &
+sleep 2
+/usr/lib/xdg-desktop-portal &
+```
+
+---
+
 ## 📝 Licencia
 
 [MIT](LICENSE) © tu-nombre
