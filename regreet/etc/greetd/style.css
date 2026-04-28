@@ -1,0 +1,39 @@
+window {
+    background-color: transparent;
+}
+
+/* El panel central */
+#container {
+    background: rgba(36, 39, 58, 0.6);
+    /* Macchiato Base con Alpha */
+    backdrop-filter: blur(20px) saturate(150%);
+    border-radius: 24px;
+    border: 1px solid rgba(202, 211, 245, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    padding: 40px;
+}
+
+/* Inputs con estilo glasmórfico */
+entry {
+    background: rgba(73, 77, 100, 0.4);
+    /* Surface1 */
+    border-radius: 12px;
+    border: 1px solid transparent;
+    color: #cad3f5;
+    caret-color: #c6a0f6;
+    /* Mauve */
+    margin: 10px 0;
+}
+
+entry:focus {
+    border: 1px solid #c6a0f6;
+    box-shadow: 0 0 10px rgba(198, 160, 246, 0.3);
+}
+
+/* Reloj futurista */
+#clock {
+    font-size: 4rem;
+    font-weight: 800;
+    color: #c6a0f6;
+    text-shadow: 0 0 20px rgba(198, 160, 246, 0.5);
+}
