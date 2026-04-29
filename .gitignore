@@ -1,0 +1,10 @@
+# Ignore Agents and AI files
+.atl/
+.agents/
+
+# ignore autogenerate files
+mpd/.config/mpd/database
+mpd/.config/mpd/log
+mpd/.config/mpd/pid
+mpd/.config/mpd/state
+mpd/.config/mpd/playlists
