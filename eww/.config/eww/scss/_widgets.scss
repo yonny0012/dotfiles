@@ -127,6 +127,80 @@ circular-progress {
   color: $fg-primary;
 }
 
+// --- Music Player ---
+.music-box {
+  padding: $padding-md;
+}
+
+.album-art {
+  min-width: 64px;
+  min-height: 64px;
+  border-radius: $radius-sm;
+  background-size: cover;
+  background-position: center;
+  background-color: $bg-tertiary;
+}
+
+.music-song {
+  font-size: $font-size-normal;
+  font-weight: bold;
+  color: $fg-primary;
+}
+
+.music-artist {
+  font-size: $font-size-small;
+  color: $fg-secondary;
+}
+
+.music-btn {
+  font-size: $font-size-large;
+  color: $fg-secondary;
+  padding: $padding-sm;
+  border-radius: $radius-sm;
+  min-width: 32px;
+  min-height: 32px;
+
+  &:hover {
+    background-color: $bg-hover;
+    color: $fg-primary;
+  }
+
+  &.play {
+    font-size: $font-size-icon;
+    color: $fg-primary;
+  }
+}
+
+.music-slider {
+  min-height: 16px;
+
+  trough {
+    background-color: $bg-tertiary;
+    border-radius: $radius-sm;
+    min-height: 4px;
+
+    highlight {
+      background-color: $accent-vol;
+      border-radius: $radius-sm;
+      min-height: 4px;
+    }
+
+    slider {
+      min-width: 10px;
+      min-height: 10px;
+      border-radius: 50%;
+      background-color: $fg-primary;
+      margin: -3px 0;
+    }
+  }
+}
+
+.music-time {
+  font-size: $font-size-xs;
+  color: $fg-muted;
+  min-width: 32px;
+}
+
 // --- Session Buttons ---
 .session-btn {
   background-color: rgba(67, 76, 94, 0.6);
@@ -148,4 +222,42 @@ circular-progress {
   &.reboot { color: $accent-reboot; }
   &.lock { color: $accent-lock; }
   &.logout { color: $accent-logout; }
+}
+
+// --- Confirmation Banner ---
+.confirm-banner {
+  background-color: rgba($accent-power, 0.15);
+  border: 1px solid rgba($accent-power, 0.3);
+  border-radius: $radius-sm;
+  padding: $padding-sm $padding-md;
+}
+
+.confirm-text {
+  font-size: $font-size-small;
+  font-weight: bold;
+  color: $fg-primary;
+}
+
+.confirm-yes {
+  background-color: rgba($accent-power, 0.3);
+  border-radius: $radius-sm;
+  padding: 4px 8px;
+  color: $accent-power;
+  font-size: $font-size-icon;
+
+  &:hover {
+    background-color: rgba($accent-power, 0.5);
+  }
+}
+
+.confirm-no {
+  background-color: rgba($fg-muted, 0.3);
+  border-radius: $radius-sm;
+  padding: 4px 8px;
+  color: $fg-secondary;
+  font-size: $font-size-icon;
+
+  &:hover {
+    background-color: $bg-hover;
+  }
 }

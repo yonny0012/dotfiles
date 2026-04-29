@@ -4,14 +4,26 @@
 
 // Smooth hover transitions
 .session-btn,
-.media-btn {
+.media-btn,
+.music-btn {
   transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.media-slider trough slider {
+.media-slider trough slider,
+.music-slider trough slider {
   transition: all 150ms ease;
 }
 
 .circular-metric {
   transition: all 300ms ease;
+}
+
+// Confirmation banner
+.confirm-banner {
+  transition: all 200ms ease;
+}
+
+.confirm-yes,
+.confirm-no {
+  transition: all 150ms ease;
 }

@@ -1,44 +1,19 @@
 ;; ============================================
 ;; EWW Dashboard - PipeWire + Brightnessctl
 ;; ============================================
+;; Modular architecture: all widgets in widgets/
 
-;; --- SISTEMA ---
-(defpoll cpu_percent :interval "1s"
-  `sh -c 'top -bn1 | grep "Cpu(s)" | awk "{print int(\\$2 + \\$4)}" | grep -o "[0-9]*" || echo "0"'`)
-
-(defpoll mem_percent :interval "2s"
-  `sh -c 'free | awk "/Mem:/ {printf \\"%.0f\\", (\\$3/\\$2) * 100}" || echo "0"'`)
-
-(defpoll disk_percent :interval "30s"
-  `sh -c 'df -h / | awk "NR==2 {print int(\\$5)}"'`)
-
-(defpoll net_down :interval "2s"
-  `sh -c 'cat /sys/class/net/$(ip route | awk "/default/ {print \\$5; exit}")/statistics/rx_bytes 2>/dev/null | awk "{print int(\\$1/1024)}" || echo "0"'`)
-
-(defpoll net_up :interval "2s"
-  `sh -c 'cat /sys/class/net/$(ip route | awk "/default/ {print \\$5; exit}")/statistics/tx_bytes 2>/dev/null | awk "{print int(\\$1/1024)}" || echo "0"'`)
-
-(defpoll gpu_percent :interval "2s"
-  `sh -c 'if command -v nvidia-smi >/dev/null 2>&1; then nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | head -n1 | tr -d " "; else echo "0"; fi'`)
-
-;; --- PIPEWIRE (Volumen) ---
-(defpoll volume :interval "500ms"
-  `sh -c 'wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk "{print int(\\$2 * 100)}" || echo "0"'`)
-
-(defpoll volume_muted :interval "500ms"
-  `sh -c 'wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q MUTED && echo "true" || echo "false"'`)
-
-;; --- BRIGHTNESSCTL (Brillo) ---
-(defpoll brightness :interval "500ms"
-  `sh -c 'brightnessctl -m | awk -F, "{print int(\\$4)}"'`)
-
+(include "widgets/system.yuck")
+(include "widgets/media.yuck")
+(include "widgets/music.yuck")
+(include "widgets/session.yuck")
 
 ;; ============================================
 ;; VENTANA
 ;; ============================================
 (defwindow dashboard
   :monitor 0
-  :geometry (geometry :x "20px" :y "20px" :width "380px" :height "520px" :anchor "top right")
+  :geometry (geometry :x "20px" :y "20px" :width "380px" :height "620px" :anchor "top right")
   :stacking "fg"
   :windowtype "normal"
   :wm-ignore false
@@ -52,138 +27,5 @@
     :space-evenly false
     (system-section)
     (media-section)
+    (music-section)
     (session-section)))
-
-
-;; ============================================
-;; SISTEMA
-;; ============================================
-(defwidget system-section []
-  (box
-    :class "section-box"
-    :orientation "v"
-    :spacing 8
-    :space-evenly false
-    (box
-      :orientation "h"
-      :spacing 8
-      :space-evenly false
-      (label :text "󰍛" :class "section-icon")
-      (label :text "Sistema" :class "section-title"))
-    (metric-row :icon "󰘚" :label "CPU" :value "${cpu_percent}%" :percent {cpu_percent} :color-class "cpu")
-    (metric-row :icon "󰍛" :label "RAM" :value "${mem_percent}%" :percent {mem_percent} :color-class "ram")
-    (metric-row :icon "󰋊" :label "Disco" :value "${disk_percent}%" :percent {disk_percent} :color-class "disk")
-    (net-row)
-    (metric-row :icon "󰢮" :label "GPU" :value "${gpu_percent}%" :percent {gpu_percent} :color-class "gpu")))
-
-(defwidget metric-row [icon label value percent color-class]
-  (box
-    :class "metric-row"
-    :orientation "h"
-    :spacing 10
-    :space-evenly false
-    :valign "center"
-    (label :text icon :class "metric-icon ${color-class}")
-    (label :text label :class "metric-label")
-    (box
-      :hexpand true
-      :halign "end"
-      :spacing 8
-      (progress
-        :class "metric-bar ${color-class}"
-        :value {percent ?: 0})
-      (label :text value :class "metric-value" :width 45))))
-
-(defwidget net-row []
-  (box
-    :class "metric-row"
-    :orientation "h"
-    :spacing 10
-    :space-evenly false
-    :valign "center"
-    (label :text "󰤨" :class "metric-icon net")
-    (label :text "Red" :class "metric-label")
-    (box
-      :hexpand true
-      :halign "end"
-      :spacing 12
-      (label :text "↓ ${net_down} KB/s" :class "net-down")
-      (label :text "↑ ${net_up} KB/s" :class "net-up"))))
-
-
-;; ============================================
-;; MEDIOS - PIPEWIRE + BRIGHTNESSCTL
-;; ============================================
-(defwidget media-section []
-  (box
-    :class "section-box"
-    :orientation "v"
-    :spacing 12
-    :space-evenly false
-    (box
-      :orientation "h"
-      :spacing 8
-      :space-evenly false
-      (label :text "󰕾" :class "section-icon")
-      (label :text "Controles" :class "section-title"))
-    (volume-row)
-    (brightness-row)))
-
-(defwidget volume-row []
-  (box
-    :orientation "h"
-    :spacing 10
-    :space-evenly false
-    :valign "center"
-    :vexpand false
-    (button
-      :onclick "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-      :class "media-btn"
-      (label :text "${volume_muted == 'true' ? '󰖁' : ((volume ?: 0) < 30 ? '󰕿' : ((volume ?: 0) < 70 ? '󰖀' : '󰕾'))}" :class "media-icon vol"))
-    (scale
-      :orientation "h"
-      :class "media-slider vol"
-      :value {volume ?: 0}
-      :min 0
-      :max 100
-      :onchange "wpctl set-volume @DEFAULT_AUDIO_SINK@ {}%")
-    (label :text "${volume}%" :class "media-value" :width 45)))
-
-(defwidget brightness-row []
-  (box
-    :orientation "h"
-    :spacing 10
-    :space-evenly false
-    :valign "center"
-    :vexpand false
-    (label :text "${(brightness ?: 0) < 30 ? '󰃚' : ((brightness ?: 0) < 70 ? '󰃛' : '󰃜')}" :class "media-icon bright")
-    (scale
-      :orientation "h"
-      :class "media-slider bright"
-      :value {brightness ?: 0}
-      :min 0
-      :max 100
-      :onchange "brightnessctl set {}%")
-    (label :text "${brightness}%" :class "media-value" :width 45)))
-
-
-;; ============================================
-;; SESION
-;; ============================================
-(defwidget session-section []
-  (box
-    :class "section-box"
-    :orientation "h"
-    :spacing 10
-    :space-evenly true
-    :halign "center"
-    (session-btn :icon "󰍃" :class "logout" :cmd "loginctl terminate-user $USER")
-    (session-btn :icon "󰌾" :class "lock" :cmd "swaylock || loginctl lock-session")
-    (session-btn :icon "󰜉" :class "reboot" :cmd "systemctl reboot")
-    (session-btn :icon "󰐥" :class "power" :cmd "systemctl poweroff")))
-
-(defwidget session-btn [icon class cmd]
-  (button
-    :class "session-btn ${class}"
-    :onclick cmd
-    (label :text icon)))

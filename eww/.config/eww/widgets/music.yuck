@@ -1,0 +1,108 @@
+;; ============================================
+;; Music Player — MPD via mpc
+;; ============================================
+
+;; --- Polls ---
+(defpoll music_song :interval "1s"
+  `scripts/music_info.sh --song`)
+
+(defpoll music_artist :interval "1s"
+  `scripts/music_info.sh --artist`)
+
+(defpoll music_status :interval "1s"
+  `scripts/music_info.sh --status`)
+
+(defpoll music_progress :interval "1s"
+  `scripts/music_info.sh --time`)
+
+(defpoll music_cover :interval "1s"
+  `scripts/music_info.sh --cover`)
+
+(defpoll music_ctime :interval "1s"
+  `scripts/music_info.sh --ctime`)
+
+(defpoll music_ttime :interval "1s"
+  `scripts/music_info.sh --ttime`)
+
+;; --- Music section ---
+(defwidget music-section []
+  (box
+    :class "section-box music-box"
+    :orientation "v"
+    :spacing 8
+    :space-evenly false
+
+    ;; Header
+    (box
+      :class "section-header"
+      :orientation "h"
+      :spacing 8
+      :space-evenly false
+      (label :text "󰎈" :class "section-icon")
+      (label :text "Música" :class "section-title"))
+
+    ;; Cover + info
+    (box
+      :orientation "h"
+      :spacing 12
+      :space-evenly false
+      :hexpand true
+
+      ;; Album art
+      (box
+        :class "album-art"
+        :style "background-image: url('${music_cover}');"
+        :width 64
+        :height 64)
+
+      ;; Song info + controls
+      (box
+        :orientation "v"
+        :spacing 4
+        :space-evenly false
+        :hexpand true
+        :valign "center"
+        (label
+          :class "music-song"
+          :halign "start"
+          :limit-width 22
+          :text {music_song ?: "Sin reproducción"})
+        (label
+          :class "music-artist"
+          :halign "start"
+          :limit-width 20
+          :text {music_artist ?: "—"})))
+
+    ;; Transport controls
+    (box
+      :orientation "h"
+      :spacing 16
+      :halign "center"
+      :space-evenly false
+      (button
+        :class "music-btn"
+        :onclick "scripts/music_info.sh --prev"
+        (label :text "󰒮"))
+      (button
+        :class "music-btn play"
+        :onclick "scripts/music_info.sh --toggle"
+        (label :text "${music_status == 'playing' ? '󰏤' : '󰐊'}"))
+      (button
+        :class "music-btn"
+        :onclick "scripts/music_info.sh --next"
+        (label :text "󰒭")))
+
+    ;; Progress bar
+    (box
+      :orientation "h"
+      :spacing 8
+      :space-evenly false
+      (label :text {music_ctime ?: "0:00"} :class "music-time")
+      (scale
+        :class "music-slider"
+        :hexpand true
+        :min 0
+        :max 100
+        :value {music_progress ?: 0}
+        :onchange "mpc -q seek {}%")
+      (label :text {music_ttime ?: "0:00"} :class "music-time"))))
