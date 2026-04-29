@@ -3,7 +3,6 @@
     // Waybar Configuration (Glassmorphism & Catppuccin Macchiato)
     // Arch: GNU Stow
     // =========================================================================
-
     "layer": "top",
     "position": "top",
     // Spacing for floating effect (UI/UX Best Practice: "top-4 left-4 right-4")
@@ -13,7 +12,6 @@
     "margin-bottom": 0,
     "height": 40,
     "spacing": 8,
-    
     // Modules order
     "modules-left": [
         "custom/launcher",
@@ -24,20 +22,19 @@
         "clock"
     ],
     "modules-right": [
+        "mpd",
         "tray",
         "pulseaudio",
         "network",
         "battery",
         "custom/power"
     ],
-
     // --- [ Left Modules ] ----------------------------------------------------
     "custom/launcher": {
         "format": "",
         "on-click": "wofi --show drun",
         "tooltip": false
     },
-    
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
@@ -59,7 +56,6 @@
             "*": 5
         }
     },
-
     "hyprland/window": {
         "format": "{title}",
         "max-length": 40,
@@ -68,7 +64,6 @@
             "(.*) - fish": " [$1]"
         }
     },
-
     // --- [ Center Modules ] --------------------------------------------------
     "clock": {
         "format": "  {:%H:%M}",
@@ -88,8 +83,20 @@
             }
         }
     },
-
     // --- [ Right Modules ] ---------------------------------------------------
+    "mpd": {
+        "format": "{state_icon} {artist} - {title} ⸨{elapsedTime:%M:%S}/{totalTime:%M:%S}⸩",
+        "format-disconnected": "󰝛 Disconnected",
+        "format-stopped": "󰝛 Stopped",
+        "state-icons": {
+            "paused": "󰏤",
+            "playing": "󰐊"
+        },
+        "on-click": "mpc toggle",
+        "on-scroll-up": "mpc next",
+        "on-scroll-down": "mpc prev",
+        "interval": 2
+    },
     "pulseaudio": {
         "format": "{icon}  {volume}%",
         "format-muted": "󰝟  Muted",
@@ -100,11 +107,14 @@
             "phone": "",
             "portable": "",
             "car": "",
-            "default": ["󰕿", "󰖀", "󰕾"]
+            "default": [
+                "󰕿",
+                "󰖀",
+                "󰕾"
+            ]
         },
         "on-click": "pavucontrol"
     },
-
     "network": {
         "format-wifi": "󰖩  {essid}",
         "format-ethernet": "󰈀  Connected",
@@ -114,7 +124,6 @@
         "format-alt": "{ifname}: {ipaddr}/{cidr}",
         "on-click-right": "nm-connection-editor"
     },
-
     "battery": {
         "states": {
             "warning": 30,
@@ -123,14 +132,23 @@
         "format": "{icon}  {capacity}%",
         "format-charging": "󰂄 {capacity}%",
         "format-plugged": " {capacity}%",
-        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+        "format-icons": [
+            "󰁺",
+            "󰁻",
+            "󰁼",
+            "󰁽",
+            "󰁾",
+            "󰁿",
+            "󰂀",
+            "󰂁",
+            "󰂂",
+            "󰁹"
+        ]
     },
-
     "tray": {
         "icon-size": 16,
         "spacing": 10
     },
-
     "custom/power": {
         "format": "⏻",
         "on-click": "eww open --toggle dashboard",
