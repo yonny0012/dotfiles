@@ -85,7 +85,7 @@
     },
     // --- [ Right Modules ] ---------------------------------------------------
     "mpd": {
-        "format": "{state_icon} {artist} - {title} ⸨{elapsedTime:%M:%S}/{totalTime:%M:%S}⸩",
+        "format": "{stateIcon} {artist} - {title} ⸨{elapsedTime:%M:%S}/{totalTime:%M:%S}⸩",
         "format-disconnected": "󰝛 Disconnected",
         "format-stopped": "󰝛 Stopped",
         "state-icons": {

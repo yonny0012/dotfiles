@@ -10,22 +10,17 @@
 .metric-circle {
   min-width: $circle-size;
   min-height: $circle-size;
-  background-color: transparent;
-  // Track color (unfilled portion)
-  color: $bg-tertiary;
+  // GTK circular-progress:
+  //   background-color = track (unfilled ring)
+  //   color = progress arc (filled portion)
+  background-color: $bg-tertiary;
+  color: $fg-muted;
+  padding: 2px;
 
-  &.cpu { color: rgba($accent-cpu, 0.25); }
-  &.ram { color: rgba($accent-ram, 0.25); }
-  &.disk { color: rgba($accent-disk, 0.25); }
-  &.gpu { color: rgba($accent-gpu, 0.25); }
-}
-
-// The circular-progress foreground uses background-color in GTK
-circular-progress {
-  &.cpu { background-color: $accent-cpu; }
-  &.ram { background-color: $accent-ram; }
-  &.disk { background-color: $accent-disk; }
-  &.gpu { background-color: $accent-gpu; }
+  &.cpu  { background-color: rgba($accent-cpu, 0.2);  color: $accent-cpu; }
+  &.ram  { background-color: rgba($accent-ram, 0.2);  color: $accent-ram; }
+  &.disk { background-color: rgba($accent-disk, 0.2); color: $accent-disk; }
+  &.gpu  { background-color: rgba($accent-gpu, 0.2);  color: $accent-gpu; }
 }
 
 .circle-value {
