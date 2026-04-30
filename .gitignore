@@ -2,9 +2,8 @@
 .atl/
 .agents/
 
-# ignore autogenerate files
-mpd/.config/mpd/database
-mpd/.config/mpd/log
-mpd/.config/mpd/pid
-mpd/.config/mpd/state
-mpd/.config/mpd/playlists
+# Ignore all mpd files by default (logs, state, database, etc.)
+mpd/.config/mpd/*
+
+# Except the main configuration file
+!mpd/.config/mpd/mpd.conf

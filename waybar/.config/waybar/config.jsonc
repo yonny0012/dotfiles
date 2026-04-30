@@ -22,7 +22,6 @@
         "clock"
     ],
     "modules-right": [
-        "mpd",
         "tray",
         "pulseaudio",
         "network",
@@ -65,7 +64,7 @@
             "(.*) - fish": " [$1]",
             "(.*) - Brave": " $1",
             "(.*) - Google Chrome": " $1",
-            "(.*) - Code": " $1"
+            "(.*) - Visual Studio Code": " $1"
         }
     },
     // --- [ Center Modules ] --------------------------------------------------
@@ -88,19 +87,6 @@
         }
     },
     // --- [ Right Modules ] ---------------------------------------------------
-    "mpd": {
-        "format": "{stateIcon} {artist} - {title} ⸨{elapsedTime:%M:%S}/{totalTime:%M:%S}⸩",
-        "format-disconnected": "󰝛 Disconnected",
-        "format-stopped": "󰝛 Stopped",
-        "state-icons": {
-            "paused": "󰏤",
-            "playing": "󰐊"
-        },
-        "on-click": "mpc toggle",
-        "on-scroll-up": "mpc next",
-        "on-scroll-down": "mpc prev",
-        "interval": 2
-    },
     "pulseaudio": {
         "format": "{icon}  {volume}%",
         "format-muted": "󰝟  Muted",
