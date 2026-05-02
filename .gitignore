@@ -4,6 +4,9 @@
 
 # Ignore all mpd files by default (logs, state, database, etc.)
 mpd/.config/mpd/*
+mpd/.config/mpd/log
+mpd/.config/mpd/database
+mpd/.config/mpd/state
 
 # Except the main configuration file
 !mpd/.config/mpd/mpd.conf
