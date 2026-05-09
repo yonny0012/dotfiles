@@ -7,6 +7,7 @@
 (include "widgets/media.yuck")
 (include "widgets/music.yuck")
 (include "widgets/session.yuck")
+(include "widgets/wifi_menu.yuck")
 
 ;; ============================================
 ;; VENTANA
@@ -29,3 +30,12 @@
     (media-section)
     (music-section)
     (session-section)))
+
+;; ============================================
+;; VENTANA DEL SELECTOR WIFI
+;; ============================================
+(defwindow wifi_menu
+  :monitor 0
+  :geometry (geometry :x "0%" :y "5%" :width "300px" :height "400px" :anchor "top right")
+  :stacking "fg"
+  (wifi-menu-widget :wifi_networks wifi_list))

@@ -20,6 +20,10 @@ set -gx THEME_FLAVOUR "macchiato"
 set -gx PAGER less
 set -gx LESS "-R --use-color"
 
+# Variables de Go
+set -gx GOPATH $HOME/go
+fish_add_path $GOPATH/bin
+
 # Agregar scripts de usuario al PATH
 fish_add_path ~/.local/bin
 fish_add_path ~/.cargo/bin

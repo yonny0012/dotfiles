@@ -98,9 +98,10 @@ cpu_percent() {
     fi
   fi
 
+  # Set globals directly — must NOT be called via $() subshell
   PREV_CPU_TOTAL=$total
   PREV_CPU_IDLE=$idle_all
-  clamp_0_100 "$result"
+  CPU_LAST=$(clamp_0_100 "$result")
 }
 
 cpu_freq() {
@@ -119,13 +120,13 @@ ram_percent() {
   total=$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)
   available=$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)
   if [[ -z "${total}" || -z "${available}" || "${total}" -le 0 ]]; then
-    printf '%s\n' "${RAM_LAST:-0}"
+    RAM_LAST="${RAM_LAST:-0}"
     return
   fi
 
   local used=$((total - available))
   local pct=$(( (used * 100) / total ))
-  clamp_0_100 "$pct"
+  RAM_LAST=$(clamp_0_100 "$pct")
 }
 
 ram_detail() {
@@ -142,10 +143,10 @@ disk_percent() {
   local used_pct
   used_pct=$(df -P / | awk 'NR==2 {gsub(/%/, "", $5); print $5}')
   if [[ -z "${used_pct}" ]]; then
-    printf '%s\n' "${DISK_LAST:-0}"
+    DISK_LAST="${DISK_LAST:-0}"
     return
   fi
-  clamp_0_100 "$used_pct"
+  DISK_LAST=$(clamp_0_100 "$used_pct")
 }
 
 disk_detail() {
@@ -156,13 +157,15 @@ disk_detail() {
 }
 
 gpu_percent() {
+  local val
   if command -v nvidia-smi &>/dev/null; then
-    nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -n1 | tr -d ' '
+    val=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -n1 | tr -d ' ')
   elif [[ -f /sys/class/drm/card0/device/gpu_busy_percent ]]; then
-    cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null
+    val=$(cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null)
   else
-    echo "0"
+    val=0
   fi
+  GPU_LAST="${val:-0}"
 }
 
 gpu_temp() {
@@ -228,11 +231,12 @@ net_percent() {
     fi
   fi
 
+  # Set globals directly — must NOT be called via $() subshell
   PREV_NET_RX=$rx
   PREV_NET_TX=$tx
   NET_DOWN_SPEED_LAST=$(format_speed "$down_bps")
   NET_UP_SPEED_LAST=$(format_speed "$up_bps")
-  clamp_0_100 "$pct"
+  NET_LAST=$(clamp_0_100 "$pct")
 }
 
 emit_snapshot() {
@@ -250,14 +254,18 @@ emit_snapshot() {
   NET_LAST="${NET_LAST:-0}"
   GPU_LAST="${GPU_LAST:-0}"
 
-  LAST_TS=$(date +%s)
   local ok=true
 
-  if ! CPU_LAST=$(cpu_percent); then ok=false; fi
-  if ! RAM_LAST=$(ram_percent); then ok=false; fi
-  if ! DISK_LAST=$(disk_percent); then ok=false; fi
-  if ! NET_LAST=$(net_percent); then ok=false; fi
-  if ! GPU_LAST=$(gpu_percent); then ok=false; fi
+  # Call directly — these functions set globals (CPU_LAST, NET_LAST, etc.)
+  # Do NOT use $() capture or side-effects are lost in subshell.
+  if ! cpu_percent; then ok=false; fi
+  if ! ram_percent; then ok=false; fi
+  if ! disk_percent; then ok=false; fi
+  if ! net_percent; then ok=false; fi
+  if ! gpu_percent; then ok=false; fi
+
+  # NOW update the timestamp for the next cycle
+  LAST_TS=$(date +%s)
 
   # Detail metrics
   CPU_FREQ_LAST=$(cpu_freq)

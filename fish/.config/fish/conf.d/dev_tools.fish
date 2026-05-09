@@ -6,10 +6,11 @@
 fish_add_path ~/.opencode/bin
 
 # pnpm
-set -gx PNPM_HOME "$HOME/.local/share/pnpm"
-if not string match -q -- $PNPM_HOME $PATH
-  set -gx PATH "$PNPM_HOME" $PATH
+set -gx PNPM_HOME "/home/devshw/.local/share/pnpm"
+if not string match -q -- "$PNPM_HOME/bin" $PATH
+  set -gx PATH "$PNPM_HOME/bin" $PATH
 end
+# pnpm end
 
 # fnm (Fast Node Manager)
 set FNM_PATH "$HOME/.local/share/fnm"
