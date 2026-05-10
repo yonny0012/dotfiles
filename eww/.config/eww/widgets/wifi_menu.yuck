@@ -1,0 +1,28 @@
+;; ============================================
+;; WIFI MENU WIDGET
+;; ============================================
+
+(defpoll wifi_list :interval "10s" "scripts/wifi.sh")
+
+(defwidget wifi-menu-widget [wifi_networks]
+  (box :orientation "v" :space-evenly false :class "wifi-menu"
+    (box :class "wifi-header" :space-evenly false
+      (label :text "󰖩" :class "wifi-icon-title")
+      (label :text " Redes Cercanas" :class "wifi-title"))
+    
+    (scroll :vscroll true :height 300 :class "wifi-scroll"
+      (box :orientation "v" :spacing 5
+        (for network in wifi_networks
+          (button :class {network.active == "yes" ? "wifi-item-active" : "wifi-item"}
+                  :onclick "scripts/wifi.sh --connect '${network.ssid}' &"
+            (box :space-evenly false
+              (label :text {network.security != "" ? "" : ""} :class "wifi-lock")
+              (label :text {network.ssid} :limit-width 15 :class "wifi-ssid")
+              (label :text {network.bars} :hexpand true :halign "end" :class "wifi-bars")
+            )
+          )
+        )
+      )
+    )
+  )
+)

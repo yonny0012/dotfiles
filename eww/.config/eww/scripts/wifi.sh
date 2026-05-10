@@ -8,7 +8,7 @@ get_networks() {
         if ($1 == "") next;
         
         # Escapar comillas dobles y barras invertidas en SSID para evitar JSON inválido
-        #gsub(/\\/, "\\\\", $1);
+        gsub(/\\/, "\\\\", $1);
         gsub(/"/, "\\\", $1);
         
         # Convert bars to percentage or keep as is

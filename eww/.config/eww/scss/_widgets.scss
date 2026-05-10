@@ -7,20 +7,54 @@
   min-width: $circle-size;
 }
 
+// Track ring (unfilled background circle at 100%)
+.metric-track {
+  min-width: $circle-size;
+  min-height: $circle-size;
+  background-color: transparent;
+  color: $bg-tertiary;
+  padding: 2px;
+
+  &.cpu {
+    color: rgba($accent-cpu, 0.2);
+  }
+
+  &.ram {
+    color: rgba($accent-ram, 0.2);
+  }
+
+  &.disk {
+    color: rgba($accent-disk, 0.2);
+  }
+
+  &.gpu {
+    color: rgba($accent-gpu, 0.2);
+  }
+}
+
+// Progress arc (filled portion)
 .metric-circle {
   min-width: $circle-size;
   min-height: $circle-size;
-  // GTK circular-progress:
-  //   background-color = track (unfilled ring)
-  //   color = progress arc (filled portion)
-  background-color: $bg-tertiary;
+  background-color: transparent;
   color: $fg-muted;
   padding: 2px;
 
-  &.cpu  { background-color: rgba($accent-cpu, 0.2);  color: $accent-cpu; }
-  &.ram  { background-color: rgba($accent-ram, 0.2);  color: $accent-ram; }
-  &.disk { background-color: rgba($accent-disk, 0.2); color: $accent-disk; }
-  &.gpu  { background-color: rgba($accent-gpu, 0.2);  color: $accent-gpu; }
+  &.cpu {
+    color: $accent-cpu;
+  }
+
+  &.ram {
+    color: $accent-ram;
+  }
+
+  &.disk {
+    color: $accent-disk;
+  }
+
+  &.gpu {
+    color: $accent-gpu;
+  }
 }
 
 .circle-value {
@@ -67,16 +101,162 @@
   font-weight: bold;
 }
 
-.net-down { color: $accent-ram; }
-.net-up { color: $accent-cpu; }
+.net-down {
+  color: $accent-ram;
+}
 
+.net-up {
+  color: $accent-cpu;
+}
+
+// --- Network ---
+.net-row {
+  padding: $padding-sm $padding-sm;
+  border-top: 1px solid $glass-border;
+  margin-top: 4px;
+}
+
+.net-icon {
+  font-size: $font-size-icon;
+  color: $accent-net;
+}
+
+.net-label {
+  font-size: $font-size-small;
+  color: $fg-secondary;
+}
+
+.net-speed {
+  font-size: $font-size-small;
+  font-weight: bold;
+}
+
+.net-down {
+  color: $accent-ram;
+}
+
+.net-up {
+  color: $accent-cpu;
+}
+
+/*
+// --- WiFi Menu ---
+.wifi-menu {
+  background-color: $bg-primary; // Cambiado de $bg-color a $bg-primary
+  border-radius: 12px;
+  padding: 15px;
+  border: 2px solid $accent-net; // Cambiado de $accent-color a $accent-net
+  min-width: 300px;
+
+  .wifi-icon-title {
+    font-size: 1.2em;
+    margin-right: 5px;
+    color: $accent-net; // Añadido color
+  }
+
+  .wifi-header {
+    margin-bottom: 10px;
+    border-bottom: 1px solid $glass-border; // Cambiado de $border-color a $glass-border
+    padding-bottom: 8px;
+
+    .wifi-title {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: $fg-primary;
+    }
+  }
+
+  .wifi-scroll {
+    min-height: 250px;
+
+    scrollbar {
+      background-color: transparent;
+      border-radius: 10px;
+
+      slider {
+        background-color: rgba($fg-muted, 0.3);
+        border-radius: 10px;
+        min-width: 6px;
+      }
+    }
+  }
+
+  .wifi-item {
+    padding: 10px 8px;
+    border-radius: 8px;
+    background: transparent;
+    transition: background-color 0.2s ease;
+    margin: 2px 0;
+
+    &:hover {
+      background: $bg-hover;
+      cursor: pointer;
+    }
+
+    .wifi-lock {
+      font-size: $font-size-small;
+      margin-right: 8px;
+      color: $fg-secondary;
+    }
+
+    .wifi-ssid {
+      font-size: $font-size-normal;
+      color: $fg-primary;
+      font-weight: 500;
+    }
+
+    .wifi-bars {
+      font-size: $font-size-small;
+      color: $fg-muted;
+      margin-left: 8px;
+    }
+  }
+
+  .wifi-item-active {
+    padding: 10px 8px;
+    border-radius: 8px;
+    background: rgba($accent-net, 0.15); // Cambiado de $accent-color a $accent-net
+    border: 1px solid rgba($accent-net, 0.3); // Cambiado de $accent-color a $accent-net
+    margin: 2px 0;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: rgba($accent-net, 0.25); // Cambiado de $accent-color a $accent-net
+      cursor: pointer;
+    }
+
+    .wifi-lock {
+      font-size: $font-size-small;
+      margin-right: 8px;
+      color: $fg-primary;
+    }
+
+    .wifi-ssid {
+      font-size: $font-size-normal;
+      color: $fg-primary;
+      font-weight: bold;
+    }
+
+    .wifi-bars {
+      font-size: $font-size-small;
+      color: $accent-net; // Cambiado de $accent-color a $accent-net
+      margin-left: 8px;
+    }
+  }
+}
+*/
 // --- Media Sliders ---
 .media-icon {
   font-size: $font-size-icon;
   min-width: 28px;
 
-  &.vol { color: $accent-vol; }
-  &.bright { color: $accent-bright; }
+  &.vol {
+    color: $accent-vol;
+  }
+
+  &.bright {
+    color: $accent-bright;
+  }
 }
 
 .media-slider {
@@ -100,11 +280,21 @@
     }
   }
 
-  &.vol trough highlight { background-color: $accent-vol; }
-  &.bright trough highlight { background-color: $accent-bright; }
+  &.vol trough highlight {
+    background-color: $accent-vol;
+  }
 
-  &.vol trough slider { background-color: $accent-vol; }
-  &.bright trough slider { background-color: $accent-bright; }
+  &.bright trough highlight {
+    background-color: $accent-bright;
+  }
+
+  &.vol trough slider {
+    background-color: $accent-vol;
+  }
+
+  &.bright trough slider {
+    background-color: $accent-bright;
+  }
 }
 
 .media-btn {
@@ -213,10 +403,21 @@
     font-size: $font-size-icon;
   }
 
-  &.power { color: $accent-power; }
-  &.reboot { color: $accent-reboot; }
-  &.lock { color: $accent-lock; }
-  &.logout { color: $accent-logout; }
+  &.power {
+    color: $accent-power;
+  }
+
+  &.reboot {
+    color: $accent-reboot;
+  }
+
+  &.lock {
+    color: $accent-lock;
+  }
+
+  &.logout {
+    color: $accent-logout;
+  }
 }
 
 // --- Confirmation Banner ---
