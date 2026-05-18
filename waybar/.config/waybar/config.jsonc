@@ -41,12 +41,12 @@
         "on-click": "activate",
         "format": "{icon}",
         "format-icons": {
-            "1": "",
+            "1": "",
             "2": "󰈹",
-            "3": "",
+            "3": "󰨞",
             "4": "󰭹",
             "5": "",
-            "6": "󰈀",
+            "6": "",
             "urgent": "",
             "active": "",
             "default": ""
@@ -63,6 +63,7 @@
             "(.*) - Mozilla Firefox": "󰈹 $1",
             "(.*) - fish": " [$1]",
             "(.*) - Brave": " $1",
+            "(.*) - Tor Browser": " $1",
             "(.*) - Google Chrome": " $1",
             "(.*) - Visual Studio Code": " $1"
         }

@@ -22,3 +22,6 @@ if type -q fzf
         set -gx FZF_DEFAULT_COMMAND "fdfind --type f --hidden --exclude .git"
     end
 end
+
+# Brew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)"
