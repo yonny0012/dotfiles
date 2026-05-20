@@ -139,24 +139,23 @@
   color: $accent-cpu;
 }
 
-/*
 // --- WiFi Menu ---
 .wifi-menu {
-  background-color: $bg-primary; // Cambiado de $bg-color a $bg-primary
+  background-color: $bg-primary;
   border-radius: 12px;
   padding: 15px;
-  border: 2px solid $accent-net; // Cambiado de $accent-color a $accent-net
+  border: 2px solid $accent-net;
   min-width: 300px;
 
   .wifi-icon-title {
     font-size: 1.2em;
     margin-right: 5px;
-    color: $accent-net; // Añadido color
+    color: $accent-net;
   }
 
   .wifi-header {
     margin-bottom: 10px;
-    border-bottom: 1px solid $glass-border; // Cambiado de $border-color a $glass-border
+    border-bottom: 1px solid $glass-border;
     padding-bottom: 8px;
 
     .wifi-title {
@@ -185,7 +184,7 @@
     padding: 10px 8px;
     border-radius: 8px;
     background: transparent;
-    transition: background-color 0.2s ease;
+    transition: background-color 200ms ease;
     margin: 2px 0;
 
     &:hover {
@@ -215,13 +214,13 @@
   .wifi-item-active {
     padding: 10px 8px;
     border-radius: 8px;
-    background: rgba($accent-net, 0.15); // Cambiado de $accent-color a $accent-net
-    border: 1px solid rgba($accent-net, 0.3); // Cambiado de $accent-color a $accent-net
+    background: rgba($accent-net, 0.15);
+    border: 1px solid rgba($accent-net, 0.3);
     margin: 2px 0;
-    transition: background-color 0.2s ease;
+    transition: background-color 200ms ease;
 
     &:hover {
-      background: rgba($accent-net, 0.25); // Cambiado de $accent-color a $accent-net
+      background: rgba($accent-net, 0.25);
       cursor: pointer;
     }
 
@@ -239,12 +238,12 @@
 
     .wifi-bars {
       font-size: $font-size-small;
-      color: $accent-net; // Cambiado de $accent-color a $accent-net
+      color: $accent-net;
       margin-left: 8px;
     }
   }
 }
-*/
+
 // --- Media Sliders ---
 .media-icon {
   font-size: $font-size-icon;

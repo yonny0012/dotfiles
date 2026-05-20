@@ -14,7 +14,7 @@
 ;; ============================================
 (defwindow dashboard
   :monitor 0
-  :geometry (geometry :x "20px" :y "20px" :width "380px" :height "620px" :anchor "top right")
+  :geometry (geometry :x "20px" :y "20px" :width "420px" :height "660px" :anchor "top right")
   :stacking "fg"
   :windowtype "normal"
   :wm-ignore false

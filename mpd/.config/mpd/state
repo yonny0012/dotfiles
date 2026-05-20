@@ -1,9 +1,9 @@
-sw_volume: 70
+sw_volume: 100
 audio_device_state:1:PipeWire Output
 audio_device_state:1:Visualizer Feed
 state: pause
-current: 3
-time: 2405.073
+current: 5
+time: 2671.3070000000002
 random: 0
 repeat: 0
 single: 0
@@ -20,4 +20,5 @@ playlist_begin
 4:LOFI CHURCH - The Lofi Christian.mp3
 5:Deep Work Music – Terminal Focus.mp3
 6:walk with Jesus.mp3
+7:trapsoul2 (Smooth Dark Beats Mix).mp3
 playlist_end

@@ -7,9 +7,14 @@
   font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
 }
 
+window {
+  background: none;
+}
+
 .dashboard-container {
   background-color: $glass-bg;
   border-radius: $radius;
+  margin: $padding-lg $padding-lg 32px $padding-lg;
   padding: $padding-lg;
   border: 1px solid $glass-border;
   box-shadow: 0 8px 32px $glass-shadow;
