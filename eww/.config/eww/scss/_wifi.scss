@@ -1,0 +1,105 @@
+// ============================================
+// WiFi Menu Styles
+// ============================================
+
+.wifi-menu {
+  background-color: $bg-primary;
+  border-radius: 12px;
+  padding: 15px;
+  border: 2px solid $accent-net;
+  min-width: 300px;
+
+  .wifi-icon-title {
+    font-size: 1.2em;
+    margin-right: 5px;
+    color: $accent-net;
+  }
+
+  .wifi-header {
+    margin-bottom: 10px;
+    border-bottom: 1px solid $glass-border;
+    padding-bottom: 8px;
+
+    .wifi-title {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: $fg-primary;
+    }
+  }
+
+  .wifi-scroll {
+    min-height: 250px;
+
+    scrollbar {
+      background-color: transparent;
+      border-radius: 10px;
+
+      slider {
+        background-color: rgba($fg-muted, 0.3);
+        border-radius: 10px;
+        min-width: 6px;
+      }
+    }
+  }
+
+  .wifi-item {
+    padding: 10px 8px;
+    border-radius: 8px;
+    background: transparent;
+    transition: background-color 200ms ease;
+    margin: 2px 0;
+
+    &:hover {
+      background: $bg-hover;
+    }
+
+    .wifi-lock {
+      font-size: $font-size-small;
+      margin-right: 8px;
+      color: $fg-secondary;
+    }
+
+    .wifi-ssid {
+      font-size: $font-size-normal;
+      color: $fg-primary;
+      font-weight: 500;
+    }
+
+    .wifi-bars {
+      font-size: $font-size-small;
+      color: $fg-muted;
+      margin-left: 8px;
+    }
+  }
+
+  .wifi-item-active {
+    padding: 10px 8px;
+    border-radius: 8px;
+    background: rgba($accent-net, 0.15);
+    border: 1px solid rgba($accent-net, 0.3);
+    margin: 2px 0;
+    transition: background-color 200ms ease;
+
+    &:hover {
+      background: rgba($accent-net, 0.25);
+    }
+
+    .wifi-lock {
+      font-size: $font-size-small;
+      margin-right: 8px;
+      color: $fg-primary;
+    }
+
+    .wifi-ssid {
+      font-size: $font-size-normal;
+      color: $fg-primary;
+      font-weight: bold;
+    }
+
+    .wifi-bars {
+      font-size: $font-size-small;
+      color: $accent-net;
+      margin-left: 8px;
+    }
+  }
+}

@@ -10,7 +10,7 @@
       (label :text "󰖩" :class "wifi-icon-title")
       (label :text " Redes Cercanas" :class "wifi-title"))
     
-    (scroll :vscroll true :height 300 :class "wifi-scroll"
+    (scroll :vscroll true :height 200 :class "wifi-scroll"
       (box :orientation "v" :spacing 5
         (for network in wifi_networks
           (button :class {network.active == "yes" ? "wifi-item-active" : "wifi-item"}

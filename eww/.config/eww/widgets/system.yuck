@@ -20,14 +20,14 @@
       (circular-progress
         :class "metric-track ${color-class}"
         :value 100
-        :thickness 15
+        :thickness 8
         :start-at 75
         :clockwise true)
       ;; Progress arc (filled portion)
       (circular-progress
         :class "metric-circle ${color-class}"
         :value {value ?: 0}
-        :thickness 15
+        :thickness 8
         :start-at 75
         :clockwise true)
       (label :text "${value}%" :class "circle-value"))
