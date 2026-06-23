@@ -1,0 +1,106 @@
+;;  ╔═══════════════════════════════════════════════════════╗
+;;  ║           Power Menu — Liquid Glass / Glassmorphic    ║
+;;  ║           Catppuccin Mocha · eww widget               ║
+;;  ╚═══════════════════════════════════════════════════════╝
+
+;; ─── Variables ──────────────────────────────────────────────────────────────
+
+(defvar power-confirm-visible false)
+(defvar power-confirm-action "")
+(defvar power-confirm-label "")
+(defvar power-confirm-icon "")
+
+(defpoll hostname_var :interval "24h" "hostname")
+
+;; ─── Widgets ─────────────────────────────────────────────────────────────────
+
+;; Un botón de acción del power menu
+(defwidget power-btn [icon label action]
+  (button
+    :class "power-btn"
+    :tooltip label
+    :onclick "eww update power-confirm-visible=true power-confirm-action='${action}' power-confirm-label='${label}' power-confirm-icon='${icon}'"
+    (box :orientation "v" :space-evenly false :spacing 10
+      (label :class "power-btn-icon" :text icon)
+      (label :class "power-btn-label" :text label))))
+
+;; Overlay de confirmación usando revealer para GTK
+(defwidget confirm-overlay []
+  (revealer :transition "crossfade" :duration "200ms" :reveal power-confirm-visible
+    (overlay
+      ;; Fondo clickeable — cierra el modal si clickeás fuera de la tarjeta
+      (eventbox :onclick "eww update power-confirm-visible=false"
+        (box :halign "fill" :valign "fill"))
+      ;; Tarjeta de confirmación
+      (box :class "confirm-card-wrapper" :halign "center" :valign "center"
+        (box :class "confirm-card" :orientation "v" :space-evenly false :spacing 24
+          (box :orientation "v" :space-evenly false :spacing 8
+            (label :class "confirm-icon" :text power-confirm-icon)
+            (label :class "confirm-title" :text power-confirm-label)
+            (label :class "confirm-subtitle" :text "¿Estás seguro?"))
+          (box :orientation "h" :space-evenly false :spacing 12
+            ;; Cancelar
+            (button
+              :class "confirm-btn cancel-btn"
+              :onclick "eww update power-confirm-visible=false"
+              (box :spacing 6
+                (label :text "󰜺")
+                (label :text "Cancelar")))
+            ;; Confirmar
+            (button
+              :class "confirm-btn ok-btn"
+              :onclick "${power-confirm-action} & eww close power-menu & eww update power-confirm-visible=false"
+              (box :spacing 6
+                (label :text "󰄬")
+                (label :text "Confirmar")))))))))
+
+;; Widget principal del power menu
+(defwidget power-menu-widget []
+  (overlay
+    ;; Capa 1: Fondo oscurecido — clickeá AFUERA de la tarjeta para cerrar
+    (eventbox :class "power-bg"
+      :halign "fill" :valign "fill"
+      :onclick "eww close power-menu"
+      (box :halign "fill" :valign "fill"))
+    
+    ;; Capa 2: Tarjeta principal
+    ;; NOTA: NO usar eventbox acá — mata los clicks del mouse en los botones hijos
+    (box :halign "center" :valign "center"
+      (box :class "power-card" :orientation "v" :space-evenly false :spacing 28
+        ;; Header con botón de cierre
+        (box :class "power-header" :orientation "h" :space-evenly false :spacing 12
+          (box :orientation "v" :space-evenly false :spacing 4
+            (label :class "power-greeting" :text "Sistema")
+            (label :class "power-hostname" :text hostname_var))
+          ;; Cerrar — escape visible SIEMPRE
+          (button :class "power-close"
+            :onclick "eww close power-menu"
+            :tooltip "Cerrar (ESC / SUPER+Q)"
+            (label :text "✕")))
+        ;; Botones de acción
+        (box :class "power-actions" :orientation "h" :space-evenly false :spacing 16
+          (power-btn :icon "󰐥" :label "Apagar"    :action "systemctl poweroff")
+          (power-btn :icon "󰜉" :label "Reiniciar" :action "systemctl reboot")
+          (power-btn :icon "󰒲" :label "Suspender" :action "systemctl suspend")
+          (power-btn :icon "󰤄" :label "Hibernar"  :action "systemctl hibernate"))
+        ;; Footer / hint
+        (label :class "power-hint" :text "🖱 Clic fuera · ✕ botón cerrar · ⌨ SUPER+Q")))
+
+    ;; Capa 3: Confirmación modal
+    (confirm-overlay)))
+
+;; ─── Window ──────────────────────────────────────────────────────────────────
+
+(defwindow power-menu
+  :monitor 0
+  :geometry (geometry
+              :x "0"
+              :y "0"
+              :width  "100%"
+              :height "100%"
+              :anchor "center")
+  :stacking "overlay"
+  :exclusive false
+  :focusable "ondemand"
+  :namespace "power-menu"
+  (power-menu-widget))

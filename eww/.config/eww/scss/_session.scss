@@ -1,0 +1,235 @@
+// ╔══════════════════════════════════════════════════════════╗
+// ║   _session.scss — Power Menu · Liquid Glass              ║
+// ║   Catppuccin Mocha palette (GTK3 Compatible)             ║
+// ╚══════════════════════════════════════════════════════════╝
+//
+// NOTA: TODO rgba() DEBE usar valores rgb EXPLÍCITOS, NO variables SCSS.
+//       grass (compilador SCSS de EWW) NO soporta rgba($var, $alpha).
+//       Tampoco soporta unidades vw/vh.
+
+// ── Base palette ─────────────────────────────────────────────
+$ctp-text:       #cdd6f4;
+$ctp-subtext1:   #bac2de;
+$ctp-subtext0:   #a6adc8;
+$ctp-overlay2:   #9399b2;
+$ctp-overlay1:   #7f849c;
+$ctp-overlay0:   #6c7086;
+$ctp-surface2:   #585b70;
+$ctp-surface1:   #45475a;
+$ctp-surface0:   #313244;
+$ctp-base:       #1e1e2e;
+$ctp-mantle:     #181825;
+$ctp-crust:      #11111b;
+
+$ctp-mauve:      #cba6f7;
+$ctp-red:        #f38ba8;
+$ctp-lavender:   #b4befe;
+
+$font-sans:      "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+
+// ─── Tokens locales (con rgb explícito para grass) ───────────
+$glass-bg:        rgba(30, 30, 46, 0.35);    // ctp-base 0.35
+$glass-border:    rgba(88, 91, 112, 0.25);   // ctp-surface2 0.25
+$glass-shadow:    rgba(0, 0, 0, 0.45);
+$overlay-bg:      rgba(17, 17, 27, 0.55);    // ctp-crust 0.55
+
+$btn-idle:        rgba(49, 50, 68, 0.45);    // ctp-surface0 0.45
+$btn-hover:       rgba(69, 71, 90, 0.70);    // ctp-surface1 0.70
+$btn-active:      rgba(88, 91, 112, 0.85);   // ctp-surface2 0.85
+$btn-border:      rgba(88, 91, 112, 0.30);   // ctp-surface2 0.30
+
+$focus-glow:      rgba(203, 166, 247, 1);    // ctp-mauve
+
+$ok-color:        rgba(243, 139, 168, 1);    // ctp-red
+$cancel-color:    rgba(127, 132, 156, 1);    // ctp-overlay1
+
+// ─── Overlay de pantalla completa ───────────────────────────
+
+.power-bg {
+  background-color: $overlay-bg;
+}
+
+// ─── Tarjeta principal ───────────────────────────────────────
+
+.power-card {
+  background-color:  $glass-bg;
+  border:            1px solid $glass-border;
+  border-radius:     28px;
+  box-shadow:        0 8px 32px $glass-shadow,
+                     inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                     inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+  padding:           36px 40px;
+  min-width:         420px;
+}
+
+// ─── Header ──────────────────────────────────────────────────
+
+.power-header {
+  margin-bottom: 24px;
+}
+
+.power-greeting {
+  color:       $ctp-subtext1;
+  font-size:   11px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+}
+
+.power-hostname {
+  color:       $ctp-text;
+  font-size:   22px;
+  font-weight: 700;
+}
+
+// ─── Botón de cierre ─────────────────────────────────────────
+
+.power-close {
+  background:     rgba(49, 50, 68, 0.30);
+  border:         1px solid transparent;
+  border-radius:  10px;
+  padding:        4px 10px;
+  font-size:      16px;
+  color:          $ctp-overlay1;
+  min-width:      32px;
+  min-height:     32px;
+  transition:     all 150ms ease;
+  margin-left:    auto;
+
+  &:hover {
+    background:   rgba(243, 139, 168, 0.20);
+    color:        #f38ba8;
+    border-color: rgba(243, 139, 168, 0.30);
+  }
+
+  &:focus {
+    background:   rgba(203, 166, 247, 0.12);
+    border-color: #cba6f7;
+    color:        #cba6f7;
+  }
+}
+
+// ─── Botones de acción ───────────────────────────────────────
+
+.power-btn {
+  background-color: $btn-idle;
+  border:          1px solid $btn-border;
+  border-radius:   18px;
+  box-shadow:      0 2px 12px rgba(0, 0, 0, 0.25);
+  padding:         18px 16px;
+  min-width:       78px;
+  transition:      background-color 180ms ease, box-shadow 180ms ease;
+
+  &:hover {
+    background-color: $btn-hover;
+    box-shadow:  0 8px 24px rgba(0, 0, 0, 0.38);
+  }
+
+  &:active {
+    background-color: $btn-active;
+    box-shadow:  0 2px 8px rgba(0, 0, 0, 0.35);
+  }
+}
+
+.power-btn-icon {
+  color:       #cba6f7;
+  font-size:   28px;
+
+  .power-btn:hover & {
+    color: #b4befe;
+  }
+}
+
+.power-btn-label {
+  color:       $ctp-subtext0;
+  font-size:   10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+// ─── Focus visible para accesibilidad ────────────────────────
+
+.power-btn:focus {
+  border-color:     #cba6f7;
+  background-color: rgba(203, 166, 247, 0.12);
+  box-shadow:       0 0 0 2px rgba(203, 166, 247, 0.25);
+
+  .power-btn-icon { color: #cba6f7; }
+}
+
+.confirm-btn:focus {
+  border-color: #cba6f7;
+  box-shadow: 0 0 0 2px rgba(203, 166, 247, 0.30);
+}
+
+// ─── Hint / footer ───────────────────────────────────────────
+
+.power-hint {
+  color:       $ctp-overlay1;
+  font-size:   10px;
+  letter-spacing: 0.5px;
+  margin-top: 16px;
+}
+
+// ─── Overlay de confirmación ─────────────────────────────────
+
+.confirm-card-wrapper {
+  // empty — overlay ya maneja el fullscreen
+}
+
+.confirm-card {
+  background-color: rgba(24, 24, 37, 0.82);
+  border:          1px solid rgba(69, 71, 90, 0.50);
+  border-radius:   22px;
+  box-shadow:      0 12px 48px rgba(0, 0, 0, 0.65),
+                   inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  padding:         32px 36px;
+  min-width:       300px;
+}
+
+.confirm-icon {
+  color:       #f38ba8;
+  font-size:   40px;
+}
+
+.confirm-title {
+  color:       $ctp-text;
+  font-size:   20px;
+  font-weight: 700;
+}
+
+.confirm-subtitle {
+  color:       $ctp-subtext1;
+  font-size:   13px;
+  margin-bottom: 24px;
+}
+
+// ─── Botones confirmar / cancelar ────────────────────────────
+
+.confirm-btn {
+  border-radius:   12px;
+  padding:         10px 20px;
+  font-size:       13px;
+  font-weight:     600;
+  transition:      background-color 150ms ease;
+}
+
+.cancel-btn {
+  background-color: rgba(127, 132, 156, 0.18);
+  border:     1px solid rgba(127, 132, 156, 0.30);
+  color:      $ctp-subtext1;
+
+  &:hover {
+    background-color: rgba(127, 132, 156, 0.30);
+    color:      $ctp-text;
+  }
+}
+
+.ok-btn {
+  background-color: rgba(243, 139, 168, 0.22);
+  border:     1px solid rgba(243, 139, 168, 0.45);
+  color:      #f38ba8;
+
+  &:hover {
+    background-color: rgba(243, 139, 168, 0.38);
+  }
+}
