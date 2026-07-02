@@ -1,0 +1,30 @@
+// =============================================================================
+// Zellij Configuration (Power User Edition)
+// Arch: GNU Stow
+// Theme: Catppuccin Macchiato
+// =============================================================================
+
+// --- [ Visuals ] -------------------------------------------------------------
+// Importamos el tema modularmente
+theme "catppuccin-macchiato"
+
+// Desactivamos los bordes pesados de los paneles para ganar espacio (Hyprland ya enmarca la ventana)
+pane_frames false
+
+// Diseño compacto por defecto (oculta la barra gigante de atajos y deja solo lo útil)
+default_layout "compact"
+
+// --- [ Behavior ] ------------------------------------------------------------
+// Al cerrar el último panel, Zellij se cierra (comportamiento similar a tmux)
+session_serialization false
+
+// --- [ Plugins (Opcional a futuro) ] -----------------------------------------
+// ui {
+//     pane_frames {
+//         rounded_corners true
+//     }
+// }
+
+// Nota: Esta configuración base sobrescribe el archivo de 19kb generado
+// automáticamente. Zellij asume atajos estándar. Solo agregaremos atajos
+// aquí si colisionan con Fish o Neovim.
