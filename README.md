@@ -25,6 +25,12 @@ Un repositorio modular, minimalista y glassmórfico gestionado con **GNU Stow**.
 | ![Kitty](https://img.shields.io/badge/Kitty-000000?style=for-the-badge&logo=kitty&logoColor=white) | Terminal GPU-acelerada |
 | ![Zellij](https://img.shields.io/badge/Zellij-5B5BD6?style=for-the-badge&logo=tmux&logoColor=white) | Multiplexor de terminal |
 | ![Starship](https://img.shields.io/badge/Starship-DD0B78?style=for-the-badge&logo=starship&logoColor=white) | Prompt minimalista y rápido |
+| ![Eww](https://img.shields.io/badge/Eww-58E1FF?style=for-the-badge&logo=rust&logoColor=black) | Dashboard, power-menu y monitor-sidebar (Elkowar's Wacky Widgets) |
+| ![MPD](https://img.shields.io/badge/MPD-1DB954?style=for-the-badge&logo=musicbrainz&logoColor=white) | Reproductor de música (daemon) |
+| ![Btop](https://img.shields.io/badge/Btop-181825?style=for-the-badge&logo=htop&logoColor=white) | Monitor de recursos del sistema |
+| ![Cava](https://img.shields.io/badge/Cava-EBA0AC?style=for-the-badge&logo=audiomack&logoColor=black) | Visualizador de audio en terminal |
+| ![Hyprlock](https://img.shields.io/badge/Hyprlock-89DCEB?style=for-the-badge&logo=hyprland&logoColor=black) | Pantalla de bloqueo |
+| ![Regreet](https://img.shields.io/badge/ReGreet-A6E3A1?style=for-the-badge&logo=gnome&logoColor=black) | Greeter gráfico (greetd) |
 
 ---
 
@@ -68,8 +74,15 @@ cd ~/dotfiles
 
 ```bash
 sudo apt update
-sudo apt install -y stow hyprland waybar wofi neovim fish kitty zellij starship
+sudo apt install -y stow hyprland waybar wofi neovim fish kitty zellij starship \
+  eww hyprlock hypridle mako-notifier cliphist udiskie btop mpd cava
 ```
+
+> **Nota:** `eww` no está empaquetado en los repos de Debian; se recomienda compilarlo
+> con `cargo install eww` (requiere Rust vía `rustup`). Verificá con `eww --version`
+> que tu build use una versión reciente de `grass` (el compilador SCSS interno);
+> versiones antiguas no resuelven `rgba($variable, $alpha)`, por eso este repo
+> usa siempre valores `rgb`/`rgba` explícitos en los `.scss` de eww.
 
 ### 3. Desplegar configuraciones con Stow
 
