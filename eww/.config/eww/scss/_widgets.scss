@@ -109,36 +109,6 @@
   color: $accent-cpu;
 }
 
-// --- Network ---
-.net-row {
-  padding: $padding-sm $padding-sm;
-  border-top: 1px solid $glass-border;
-  margin-top: 4px;
-}
-
-.net-icon {
-  font-size: $font-size-icon;
-  color: $accent-net;
-}
-
-.net-label {
-  font-size: $font-size-small;
-  color: $fg-secondary;
-}
-
-.net-speed {
-  font-size: $font-size-small;
-  font-weight: bold;
-}
-
-.net-down {
-  color: $accent-ram;
-}
-
-.net-up {
-  color: $accent-cpu;
-}
-
 // --- Media Sliders ---
 .media-icon {
   font-size: $font-size-icon;
