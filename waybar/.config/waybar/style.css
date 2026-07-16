@@ -39,6 +39,8 @@ window#waybar {
 /* Ensure all clickable modules have pointer (UX rules) */
 #workspaces button,
 #clock,
+#cpu,
+#memory,
 #pulseaudio,
 #network,
 #battery,
@@ -58,6 +60,8 @@ window#waybar {
 /* Hover states (Smooth transitions required by UI/UX guide) */
 #workspaces button:hover,
 #clock:hover,
+#cpu:hover,
+#memory:hover,
 #pulseaudio:hover,
 #network:hover,
 #battery:hover,
@@ -124,6 +128,16 @@ window#waybar {
 }
 
 /* Right Indicators */
+#cpu {
+    color: #f5bde6;
+    /* Pink */
+}
+
+#memory {
+    color: #eed49f;
+    /* Yellow */
+}
+
 #pulseaudio {
     color: #eed49f;
     /* Yellow */

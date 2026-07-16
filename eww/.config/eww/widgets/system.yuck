@@ -4,7 +4,7 @@
 
 ;; --- JSON stream from metric_collector ---
 (deflisten metrics
-  :initial '{"cpu":0,"ram":0,"disk":0,"gpu":0,"net":0,"cpu_freq":"--","ram_used_gb":"0","ram_total_gb":"0","disk_used_gb":"0","disk_total_gb":"0","gpu_temp":"--","net_down_speed":"0 B/s","net_up_speed":"0 B/s"}'
+  :initial '{"cpu":0,"ram":0,"disk":0,"swap":0,"gpu":0,"net":0,"cpu_freq":"--","ram_used_gb":"0","ram_total_gb":"0","disk_used_gb":"0","disk_total_gb":"0","gpu_temp":"--","net_down_speed":"0 B/s","net_up_speed":"0 B/s"}'
   `~/.config/eww/scripts/metric_collector.sh stream`)
 
 ;; --- Reusable circular metric widget ---

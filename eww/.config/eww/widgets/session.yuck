@@ -52,7 +52,7 @@
       ;; Bloquear pantalla (safe → direct)
       (button
         :class "session-btn lock"
-        :onclick "swaylock || loginctl lock-session"
+        :onclick "hyprlock || loginctl lock-session"
         :tooltip "Bloquear"
         (label :text "󰌾"))
 

@@ -23,6 +23,8 @@
     ],
     "modules-right": [
         "tray",
+        "cpu",
+        "memory",
         "pulseaudio",
         "network",
         "battery",
@@ -88,6 +90,14 @@
         }
     },
     // --- [ Right Modules ] ---------------------------------------------------
+    "cpu": {
+        "format": "  {usage}%",
+        "on-click": "kitty -e btop"
+    },
+    "memory": {
+        "format": "  {}%",
+        "on-click": "kitty -e btop"
+    },
     "pulseaudio": {
         "format": "{icon}  {volume}%",
         "format-muted": "󰝟  Muted",

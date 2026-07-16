@@ -71,6 +71,7 @@ RAM_LAST=${RAM_LAST:-0}
 DISK_LAST=${DISK_LAST:-0}
 NET_LAST=${NET_LAST:-0}
 GPU_LAST=${GPU_LAST:-0}
+SWAP_LAST=${SWAP_LAST:-0}
 CPU_FREQ_LAST='${CPU_FREQ_LAST:-0}'
 RAM_USED_GB_LAST='${RAM_USED_GB_LAST:-0}'
 RAM_TOTAL_GB_LAST='${RAM_TOTAL_GB_LAST:-0}'
@@ -154,6 +155,19 @@ disk_detail() {
   read -r used_kb total_kb <<< "$(df -P / | awk 'NR==2 {print $3, $2}')"
   DISK_USED_GB_LAST=$(awk "BEGIN {printf \"%.0f\", ${used_kb:-0} / 1048576}")
   DISK_TOTAL_GB_LAST=$(awk "BEGIN {printf \"%.0f\", ${total_kb:-0} / 1048576}")
+}
+
+swap_percent() {
+  local total free
+  total=$(awk '/^SwapTotal:/ {print $2}' /proc/meminfo 2>/dev/null)
+  free=$(awk '/^SwapFree:/ {print $2}' /proc/meminfo 2>/dev/null)
+  if [[ -z "${total}" || "${total}" -le 0 ]]; then
+    SWAP_LAST=0
+    return
+  fi
+  local used=$((total - free))
+  local pct=$(( (used * 100) / total ))
+  SWAP_LAST=$(clamp_0_100 "$pct")
 }
 
 gpu_percent() {
@@ -253,6 +267,7 @@ emit_snapshot() {
   DISK_LAST="${DISK_LAST:-0}"
   NET_LAST="${NET_LAST:-0}"
   GPU_LAST="${GPU_LAST:-0}"
+  SWAP_LAST="${SWAP_LAST:-0}"
 
   local ok=true
 
@@ -261,6 +276,7 @@ emit_snapshot() {
   if ! cpu_percent; then ok=false; fi
   if ! ram_percent; then ok=false; fi
   if ! disk_percent; then ok=false; fi
+  if ! swap_percent; then ok=false; fi
   if ! net_percent; then ok=false; fi
   if ! gpu_percent; then ok=false; fi
 
@@ -287,11 +303,12 @@ emit_snapshot() {
 
   write_state
 
-  printf '{"ts":%s,"cpu":%s,"ram":%s,"disk":%s,"gpu":%s,"net":%s,"cpu_freq":"%s","ram_used_gb":"%s","ram_total_gb":"%s","disk_used_gb":"%s","disk_total_gb":"%s","gpu_temp":"%s","net_down_speed":"%s","net_up_speed":"%s","stale":{"cpu":%s,"ram":%s,"disk":%s,"net":%s}}\n' \
+  printf '{"ts":%s,"cpu":%s,"ram":%s,"disk":%s,"swap":%s,"gpu":%s,"net":%s,"cpu_freq":"%s","ram_used_gb":"%s","ram_total_gb":"%s","disk_used_gb":"%s","disk_total_gb":"%s","gpu_temp":"%s","net_down_speed":"%s","net_up_speed":"%s","stale":{"cpu":%s,"ram":%s,"disk":%s,"net":%s}}\n' \
     "$LAST_TS" \
     "${CPU_LAST:-0}" \
     "${RAM_LAST:-0}" \
     "${DISK_LAST:-0}" \
+    "${SWAP_LAST:-0}" \
     "${GPU_LAST:-0}" \
     "${NET_LAST:-0}" \
     "${CPU_FREQ_LAST:-0}" \
@@ -312,6 +329,7 @@ emit_value() {
     cpu)            printf '%s\n' "${CPU_LAST:-0}" ;;
     ram)            printf '%s\n' "${RAM_LAST:-0}" ;;
     disk)           printf '%s\n' "${DISK_LAST:-0}" ;;
+    swap)           printf '%s\n' "${SWAP_LAST:-0}" ;;
     net)            printf '%s\n' "${NET_LAST:-0}" ;;
     gpu)            printf '%s\n' "${GPU_LAST:-0}" ;;
     cpu_freq)       printf '%s\n' "${CPU_FREQ_LAST:-0}" ;;
@@ -358,6 +376,7 @@ emit_cached_value() {
     cpu)            printf '%s\n' "${CPU_LAST:-0}" ;;
     ram)            printf '%s\n' "${RAM_LAST:-0}" ;;
     disk)           printf '%s\n' "${DISK_LAST:-0}" ;;
+    swap)           printf '%s\n' "${SWAP_LAST:-0}" ;;
     net)            printf '%s\n' "${NET_LAST:-0}" ;;
     gpu)            printf '%s\n' "${GPU_LAST:-0}" ;;
     cpu_freq)       printf '%s\n' "${CPU_FREQ_LAST:-0}" ;;

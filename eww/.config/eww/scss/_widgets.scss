@@ -16,19 +16,19 @@
   padding: 2px;
 
   &.cpu {
-    color: rgba($accent-cpu, 0.2);
+    color: rgba(191, 97, 106, 0.2);
   }
 
   &.ram {
-    color: rgba($accent-ram, 0.2);
+    color: rgba(163, 190, 140, 0.2);
   }
 
   &.disk {
-    color: rgba($accent-disk, 0.2);
+    color: rgba(235, 203, 139, 0.2);
   }
 
   &.gpu {
-    color: rgba($accent-gpu, 0.2);
+    color: rgba(180, 142, 173, 0.2);
   }
 }
 
@@ -316,8 +316,8 @@
 
 // --- Confirmation Banner ---
 .confirm-banner {
-  background-color: rgba($accent-power, 0.15);
-  border: 1px solid rgba($accent-power, 0.3);
+  background-color: rgba(191, 97, 106, 0.15);
+  border: 1px solid rgba(191, 97, 106, 0.3);
   border-radius: $radius-sm;
   padding: $padding-sm $padding-md;
 }
@@ -329,19 +329,19 @@
 }
 
 .confirm-yes {
-  background-color: rgba($accent-power, 0.3);
+  background-color: rgba(191, 97, 106, 0.3);
   border-radius: $radius-sm;
   padding: 4px 8px;
   color: $accent-power;
   font-size: $font-size-icon;
 
   &:hover {
-    background-color: rgba($accent-power, 0.5);
+    background-color: rgba(191, 97, 106, 0.5);
   }
 }
 
 .confirm-no {
-  background-color: rgba($fg-muted, 0.3);
+  background-color: rgba(76, 86, 106, 0.3);
   border-radius: $radius-sm;
   padding: 4px 8px;
   color: $fg-secondary;

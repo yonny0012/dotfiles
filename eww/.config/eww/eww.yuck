@@ -9,6 +9,7 @@
 (include "widgets/session.yuck")
 (include "widgets/wifi_menu.yuck")
 (include "./widgets/session-2.yuck")
+(include "./widgets/monitor-sidebar.yuck")
 
 ;; ============================================
 ;; VENTANA
@@ -40,3 +41,21 @@
   :geometry (geometry :x "0%" :y "5%" :width "300px" :height "400px" :anchor "top right")
   :stacking "fg"
   (wifi-menu-widget :wifi_networks wifi_list))
+
+;; ============================================
+;; VENTANA DEL SIDEBAR DE MONITOREO
+;; ============================================
+(defwindow monitor-sidebar
+  :monitor 0
+  :geometry (geometry
+    :x "0px"
+    :y "0px"
+    :width "200px"
+    :height "420px"
+    :anchor "left center"
+  )
+  :stacking "bg"
+  :exclusive true
+  :focusable false
+  :namespace "monitor-sidebar"
+  (monitor-sidebar))

@@ -1,0 +1,36 @@
+(defwidget metric-graph [label value color icon]
+  (box :orientation "v" :space-evenly false :class "metric-block"
+    (box :orientation "h" :space-evenly false :class "metric-header"
+      (label :class "metric-icon" :text icon)
+      (label :class "metric-label" :text label)
+      (label :class "metric-value" :text "${value}%"))
+    (graph :class "metric-graph"
+           :value value
+           :thickness 2
+           :time-range "60s"
+           :min 0
+           :max 100
+           :dynamic true
+           :line-style "round"
+           :vertical false
+           :width 170
+           :height 50)))
+
+(defwidget monitor-sidebar []
+  (box :orientation "v" :space-evenly false :class "monitor-sidebar"
+    (metric-graph :label "CPU"
+                   :icon ""
+                   :value {metrics.cpu}
+                   :color "peach")
+    (metric-graph :label "RAM"
+                   :icon ""
+                   :value {metrics.ram}
+                   :color "mauve")
+    (metric-graph :label "DISK"
+                   :icon "󰋊"
+                   :value {metrics.disk}
+                   :color "teal")
+    (metric-graph :label "SWAP"
+                   :icon ""
+                   :value {metrics.swap}
+                   :color "yellow")))
