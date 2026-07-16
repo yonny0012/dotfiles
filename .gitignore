@@ -2,6 +2,10 @@
 .atl/
 .agents/
 
+# Runtime logs (no deben versionarse)
+eww_debug.log
+*.log
+
 # Ignore all mpd files by default (logs, state, database, etc.)
 mpd/.config/mpd/state
 mpd/.config/mpd/log
