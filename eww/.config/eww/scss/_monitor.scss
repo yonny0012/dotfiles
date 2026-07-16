@@ -33,5 +33,22 @@
 }
 
 .metric-graph {
-    color: #8aadf4; /* color base de la línea, sobreescribible por instancia si usas custom CSS classes */
+    color: #8aadf4; /* fallback si no se pasa :color en metric-graph */
+
+    /* Catppuccin Mocha — una clase por métrica, aplicada vía :color en monitor-sidebar.yuck */
+    &.peach {
+        color: #fab387; /* CPU */
+    }
+
+    &.mauve {
+        color: #cba6f7; /* RAM */
+    }
+
+    &.teal {
+        color: #94e2d5; /* DISK */
+    }
+
+    &.yellow {
+        color: #f9e2af; /* SWAP */
+    }
 }
