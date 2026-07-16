@@ -3,9 +3,14 @@
 // ║   Catppuccin Mocha palette (GTK3 Compatible)             ║
 // ╚══════════════════════════════════════════════════════════╝
 //
-// NOTA: TODO rgba() DEBE usar valores rgb EXPLÍCITOS, NO variables SCSS.
-//       grass (compilador SCSS de EWW) NO soporta rgba($var, $alpha).
-//       Tampoco soporta unidades vw/vh.
+// NOTA: se usan valores rgb EXPLÍCITOS (no rgba($var, $alpha)) por
+//       portabilidad: versiones antiguas de grass (compilador SCSS de
+//       EWW, distinto de dart-sass) no resuelven rgba() con una variable
+//       de color como primer argumento. Verificado OK en grass 0.12.4/0.13.4.
+//       Tampoco usar unidades vw/vh (no soportadas por grass).
+// NOTA: variables prefijadas con "session-" para no colisionar con los
+//       nombres homónimos ($glass-bg, $glass-border, $glass-shadow)
+//       definidos en _variables.scss (paleta Nord del dashboard principal).
 
 // ── Base palette ─────────────────────────────────────────────
 $ctp-text:       #cdd6f4;
@@ -28,9 +33,9 @@ $ctp-lavender:   #b4befe;
 $font-sans:      "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
 
 // ─── Tokens locales (con rgb explícito para grass) ───────────
-$glass-bg:        rgba(30, 30, 46, 0.35);    // ctp-base 0.35
-$glass-border:    rgba(88, 91, 112, 0.25);   // ctp-surface2 0.25
-$glass-shadow:    rgba(0, 0, 0, 0.45);
+$session-glass-bg:        rgba(30, 30, 46, 0.35);    // ctp-base 0.35
+$session-glass-border:    rgba(88, 91, 112, 0.25);   // ctp-surface2 0.25
+$session-glass-shadow:    rgba(0, 0, 0, 0.45);
 $overlay-bg:      rgba(17, 17, 27, 0.55);    // ctp-crust 0.55
 
 $btn-idle:        rgba(49, 50, 68, 0.45);    // ctp-surface0 0.45
@@ -52,10 +57,10 @@ $cancel-color:    rgba(127, 132, 156, 1);    // ctp-overlay1
 // ─── Tarjeta principal ───────────────────────────────────────
 
 .power-card {
-  background-color:  $glass-bg;
-  border:            1px solid $glass-border;
+  background-color:  $session-glass-bg;
+  border:            1px solid $session-glass-border;
   border-radius:     28px;
-  box-shadow:        0 8px 32px $glass-shadow,
+  box-shadow:        0 8px 32px $session-glass-shadow,
                      inset 0 1px 0 rgba(255, 255, 255, 0.12),
                      inset 0 -1px 0 rgba(0, 0, 0, 0.18);
   padding:           36px 40px;
