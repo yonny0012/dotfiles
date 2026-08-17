@@ -8,6 +8,11 @@ status is-interactive || exit
 
 # --- [ Zoxide (Reemplazo de cd) ] ---------------------------------------------
 if type -q zoxide
+    # Workaround para Fish 4.x: extraer la función `cd` embebida antes de iniciar zoxide
+    if not builtin functions --query __zoxide_cd_internal
+        functions cd | string replace --regex '^function cd' 'function __zoxide_cd_internal' | source
+    end
+
     zoxide init fish | source
     alias cd="z"
     alias cdi="zi"
