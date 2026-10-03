@@ -57,3 +57,6 @@ end
 
 # Added by Antigravity CLI installer
 set -gx PATH "/home/devshw/.local/bin" $PATH
+
+# Pi
+fish_add_path "/home/devshw/.local/share/fnm/node-versions/v24.18.0/installation/bin"

@@ -28,3 +28,12 @@ fish_add_path $GOPATH/bin
 fish_add_path ~/.local/bin
 fish_add_path ~/.cargo/bin
 fish_add_path ~/.go/bin
+
+# variables de sistema para conexion
+# set -gx HTTP_PROXY "10.0.0.1:8080"
+# set -gx HTTPS_PROXY "10.0.0.1:8080"
+# set -gx NO_PROXY "10.*, localhost, *uci.cu"
+# set -gx http_proxy "10.0.0.1:8080"
+# set -gx https_proxy "10.0.0.1:8080"
+# set -gx no_proxy "10.*, localhost, *uci.cu"
+

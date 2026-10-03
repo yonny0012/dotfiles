@@ -1,0 +1,12 @@
+# ~/.config/mako/config
+# Docs: man 5 mako | makoctl reload aplica cambios en vivo
+
+# Sonido al llegar una notificación (vía PipeWire)
+on-notify=exec pw-play /usr/share/sounds/freedesktop/stereo/bell.oga
+
+# Visual: el resto usa los defaults de mako; descomenta para personalizar
+# background-color=#24273a
+# text-color=#cad3f5
+# border-color=#00e5ff
+# border-size=2
+# default-timeout=5000
