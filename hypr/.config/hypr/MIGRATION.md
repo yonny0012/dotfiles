@@ -33,8 +33,7 @@ Punto de entrada: `hyprland.conf` (25 líneas, solo `source=`). Contenido real e
 | **Total** | **~445** | | |
 
 **Acoplamientos externos detectados (fuera de `hypr/`):**
-- `eww/.config/eww/widgets/session.yuck` → usa `hyprctl dispatch exit` (sigue funcionando, no cambia)
-- `eww/.config/eww/scripts/power_actions.sh` → idem
+- `eww/.config/eww/widgets/session.yuck` → usaba `hyprctl dispatch exit`, que con config Lua falla; ahora llama a `eww/.config/eww/scripts/logout.sh` (`hyprctl dispatch 'hl.dsp.exit()'`)
 - `hypr/.config/hypr/scripts/toggle-power-menu.sh` → no toca hyprctl (solo eww) ✅
 - ⚠️ **Ningún script hace `hyprctl keyword`** (el patrón que sí se rompería con Lua) — verificado
 

@@ -28,7 +28,7 @@
           :class "confirm-text")
         (button
           :class "confirm-yes"
-          :onclick "${confirm-action == 'poweroff' ? 'systemctl poweroff' : (confirm-action == 'reboot' ? 'systemctl reboot' : 'hyprctl dispatch exit || loginctl terminate-user $USER')} & eww update confirm-action=none"
+          :onclick "${confirm-action == 'poweroff' ? 'systemctl poweroff' : (confirm-action == 'reboot' ? 'systemctl reboot' : 'scripts/logout.sh')} & eww update confirm-action=none"
           (label :text "󰄬"))
         (button
           :class "confirm-no"
