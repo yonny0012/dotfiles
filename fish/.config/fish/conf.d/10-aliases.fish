@@ -20,9 +20,11 @@ if type -q eza
 end
 
 # Reemplazo de cat por bat (si está instalado)
-if type -q bat
-    alias cat="bat -p" # Texto plano
-    alias catn="bat"   # Con números de línea y sintaxis
+# (en Debian el binario se llama batcat)
+if type -q batcat
+    alias bat="batcat"
+    alias cat="batcat -p" # Texto plano
+    alias catn="batcat"   # Con números de línea y sintaxis
 end
 
 # Reemplazo de find por fd (si está instalado)

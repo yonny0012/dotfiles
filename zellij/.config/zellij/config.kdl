@@ -301,6 +301,7 @@ web_client {
 // Choose the theme that is specified in the themes section.
 // Default: default
 // 
+default_shell "fish"
 theme "catppuccin-macchiato"
  
 // Choose the base input mode of zellij.

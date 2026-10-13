@@ -1,25 +1,28 @@
 # ==============================================================================
-# Manual Tool Paths (Node, pnpm, Rust, fnm, etc.)
+# Manual Tool Paths (Node, pnpm, fnm, etc.)
+# Cada bloque se activa solo si la herramienta está instalada.
+# Rust/Cargo: lo gestiona conf.d/rustup.fish
 # ==============================================================================
 
 # OpenCode / Agent Teams Lite
-fish_add_path ~/.opencode/bin
+if test -d ~/.opencode/bin
+    fish_add_path -g ~/.opencode/bin
+end
 
 # pnpm
-set -gx PNPM_HOME "/home/devshw/.local/share/pnpm"
-if not string match -q -- "$PNPM_HOME/bin" $PATH
-  set -gx PATH "$PNPM_HOME/bin" $PATH
-end
-# pnpm end
-
-# fnm (Fast Node Manager)
-set FNM_PATH "$HOME/.local/share/fnm"
-if test -d "$FNM_PATH"
-  set PATH "$FNM_PATH" $PATH
-  fnm env --shell fish | source
+if test -d ~/.local/share/pnpm
+    set -gx PNPM_HOME ~/.local/share/pnpm
+    fish_add_path -g $PNPM_HOME/bin
 end
 
-# Rust / Cargo
-if test -f "$HOME/.cargo/env.fish"
-  source "$HOME/.cargo/env.fish"
+# fnm (Fast Node Manager): expone la versión de node activa
+set -l fnm_path ~/.local/share/fnm
+if test -x $fnm_path/fnm
+    fish_add_path -g $fnm_path
+    fnm env --shell fish | source
+end
+
+# Homebrew
+if test -x /home/linuxbrew/.linuxbrew/bin/brew
+    /home/linuxbrew/.linuxbrew/bin/brew shellenv fish | source
 end

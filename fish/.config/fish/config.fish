@@ -47,16 +47,3 @@ end
 if type -q starship
     starship init fish | source
 end
-
-# pnpm
-set -gx PNPM_HOME "/home/devshw/.local/share/pnpm"
-if not string match -q -- "$PNPM_HOME/bin" $PATH
-  set -gx PATH "$PNPM_HOME/bin" $PATH
-end
-# pnpm end
-
-# Added by Antigravity CLI installer
-set -gx PATH "/home/devshw/.local/bin" $PATH
-
-# Pi
-fish_add_path "/home/devshw/.local/share/fnm/node-versions/v24.18.0/installation/bin"
