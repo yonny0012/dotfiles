@@ -35,7 +35,7 @@
 .metric-graph {
     color: #8aadf4; /* fallback si no se pasa :color en metric-graph */
 
-    /* Catppuccin Mocha — una clase por métrica, aplicada vía :color en monitor-sidebar.yuck */
+    // Catppuccin Mocha — una clase por métrica, aplicada vía :color en monitor-sidebar.yuck
     &.peach {
         color: #fab387; /* CPU */
     }

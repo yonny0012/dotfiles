@@ -95,7 +95,6 @@ $cancel-color:    rgba(127, 132, 156, 1);    // ctp-overlay1
   min-width:      32px;
   min-height:     32px;
   transition:     background-color 150ms ease, color 150ms ease, border-color 150ms ease;
-  margin-left:    auto;
 
   &:hover {
     background:   rgba(243, 139, 168, 0.20);

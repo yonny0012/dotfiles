@@ -74,6 +74,7 @@
             (label :class "power-hostname" :text hostname_var))
           ;; Cerrar — escape visible SIEMPRE
           (button :class "power-close"
+            :halign "end" :hexpand true
             :onclick "eww close power-menu"
             :tooltip "Cerrar (ESC / SUPER+Q)"
             (label :text "✕")))
