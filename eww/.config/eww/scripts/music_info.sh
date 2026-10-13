@@ -5,83 +5,72 @@
 # ============================================
 
 COVER="/tmp/.music_cover.jpg"
+COVER_SRC="/tmp/.music_cover.src"
 MUSIC_DIR="${MUSIC_DIR:-$HOME/Music}"
+SEP=$'\x1f'
 
-get_status() {
-  local status
-  status="$(mpc status 2>/dev/null)"
-  if [[ $status == *"[playing]"* ]]; then
-    echo "playing"
-  elif [[ $status == *"[paused]"* ]]; then
-    echo "paused"
-  else
-    echo "stopped"
-  fi
-}
-
-get_song() {
-  local song
-  song=$(mpc -f %title% current 2>/dev/null)
-  echo "${song:-Offline}"
-}
-
-get_artist() {
-  local artist
-  artist=$(mpc -f %artist% current 2>/dev/null)
-  echo "${artist:-Offline}"
-}
-
-get_time() {
-  local time
-  time=$(mpc status 2>/dev/null | grep '%)'  | awk '{print $4}' | tr -d '(%)')
-  echo "${time:-0}"
-}
-
-get_ctime() {
-  local ctime
-  ctime=$(mpc status 2>/dev/null | grep '#' | awk '{print $3}' | sed 's|/.*||g')
-  echo "${ctime:-0:00}"
-}
-
-get_ttime() {
-  local ttime
-  ttime=$(mpc -f %time% current 2>/dev/null)
-  echo "${ttime:-0:00}"
-}
-
+# Extracts the cover only when the track changes; prints its path or nothing.
 get_cover() {
-  local current_file
-  current_file=$(mpc current -f %file% 2>/dev/null)
+  local current_file="$1"
 
   if [[ -z "$current_file" ]]; then
     echo ""
     return
   fi
 
-  local exit_code
-  ffmpeg -i "${MUSIC_DIR}/${current_file}" "${COVER}" -y &>/dev/null
-  exit_code=$?
+  if [[ -f "$COVER" && "$(cat "$COVER_SRC" 2>/dev/null)" == "$current_file" ]]; then
+    echo "$COVER"
+    return
+  fi
 
-  if [[ "$exit_code" -eq 0 ]]; then
+  if ffmpeg -i "${MUSIC_DIR}/${current_file}" "${COVER}" -y &>/dev/null; then
+    printf '%s' "$current_file" >"$COVER_SRC"
     echo "$COVER"
   else
+    rm -f "$COVER_SRC"
     echo ""
   fi
 }
 
+# One JSON object with everything the widget needs, from two mpc calls.
+get_all() {
+  local status_out state="stopped" progress=0 ctime="0:00"
+  local song artist ttime file
+
+  status_out="$(mpc status 2>/dev/null)"
+  if [[ $status_out == *"[playing]"* ]]; then
+    state="playing"
+  elif [[ $status_out == *"[paused]"* ]]; then
+    state="paused"
+  fi
+
+  if [[ $status_out =~ ([0-9:]+)/[0-9:]+\ +\(([0-9]+)%\) ]]; then
+    ctime="${BASH_REMATCH[1]}"
+    progress="${BASH_REMATCH[2]}"
+  fi
+
+  IFS="$SEP" read -r song artist ttime file \
+    < <(mpc -f "%title%${SEP}%artist%${SEP}%time%${SEP}%file%" current 2>/dev/null)
+
+  jq -cn \
+    --arg status "$state" \
+    --arg song "${song:-Offline}" \
+    --arg artist "${artist:-Offline}" \
+    --argjson progress "$progress" \
+    --arg ctime "$ctime" \
+    --arg ttime "${ttime:-0:00}" \
+    --arg cover "$(get_cover "$file")" \
+    '{status: $status, song: $song, artist: $artist, progress: $progress,
+      ctime: $ctime, ttime: $ttime, cover: $cover}'
+}
+
 case "$1" in
-  --song)    get_song ;;
-  --artist)  get_artist ;;
-  --status)  get_status ;;
-  --time)    get_time ;;
-  --ctime)   get_ctime ;;
-  --ttime)   get_ttime ;;
-  --cover)   get_cover ;;
+  --all)     get_all ;;
   --toggle)  mpc -q toggle ;;
-  --next)    mpc -q next; get_cover >/dev/null ;;
-  --prev)    mpc -q prev; get_cover >/dev/null ;;
+  --next)    mpc -q next ;;
+  --prev)    mpc -q prev ;;
   *)
-    echo "Usage: $0 {--song|--artist|--status|--time|--ctime|--ttime|--cover|--toggle|--next|--prev}" >&2
+    echo "Usage: $0 {--all|--toggle|--next|--prev}" >&2
     exit 1
     ;;
 esac

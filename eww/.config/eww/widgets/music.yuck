@@ -2,27 +2,11 @@
 ;; Music Player — MPD via mpc
 ;; ============================================
 
-;; --- Polls ---
-(defpoll music_song :interval "1s"
-  `scripts/music_info.sh --song`)
-
-(defpoll music_artist :interval "1s"
-  `scripts/music_info.sh --artist`)
-
-(defpoll music_status :interval "1s"
-  `scripts/music_info.sh --status`)
-
-(defpoll music_progress :interval "1s"
-  `scripts/music_info.sh --time`)
-
-(defpoll music_cover :interval "1s"
-  `scripts/music_info.sh --cover`)
-
-(defpoll music_ctime :interval "1s"
-  `scripts/music_info.sh --ctime`)
-
-(defpoll music_ttime :interval "1s"
-  `scripts/music_info.sh --ttime`)
+;; --- Poll ---
+;; A single call returns every field as JSON (see scripts/music_info.sh).
+(defpoll music :interval "1s"
+  :initial '{"status":"stopped","song":"Offline","artist":"Offline","progress":0,"ctime":"0:00","ttime":"0:00","cover":""}'
+  `scripts/music_info.sh --all`)
 
 ;; --- Music section ---
 (defwidget music-section []
@@ -51,7 +35,7 @@
       ;; Album art
       (box
         :class "album-art"
-        :style "background-image: url('${music_cover}');"
+        :style "background-image: url('${music.cover}');"
         :width 64
         :height 64)
 
@@ -66,12 +50,12 @@
           :class "music-song"
           :halign "start"
           :limit-width 22
-          :text {music_song ?: "Sin reproducción"})
+          :text {music.song ?: "Sin reproducción"})
         (label
           :class "music-artist"
           :halign "start"
           :limit-width 20
-          :text {music_artist ?: "—"})))
+          :text {music.artist ?: "—"})))
 
     ;; Transport controls
     (box
@@ -86,7 +70,7 @@
       (button
         :class "music-btn play"
         :onclick "scripts/music_info.sh --toggle"
-        (label :text "${music_status == 'playing' ? '󰏤' : '󰐊'}"))
+        (label :text "${music.status == 'playing' ? '󰏤' : '󰐊'}"))
       (button
         :class "music-btn"
         :onclick "scripts/music_info.sh --next"
@@ -97,12 +81,12 @@
       :orientation "h"
       :spacing 8
       :space-evenly false
-      (label :text {music_ctime ?: "0:00"} :class "music-time")
+      (label :text {music.ctime ?: "0:00"} :class "music-time")
       (scale
         :class "music-slider"
         :hexpand true
         :min 0
         :max 100
-        :value {music_progress ?: 0}
+        :value {music.progress ?: 0}
         :onchange "mpc -q seek {}%")
-      (label :text {music_ttime ?: "0:00"} :class "music-time"))))
+      (label :text {music.ttime ?: "0:00"} :class "music-time"))))
