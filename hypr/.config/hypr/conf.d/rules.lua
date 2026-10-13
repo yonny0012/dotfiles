@@ -194,32 +194,3 @@ hl.window_rule({
     center = true,
     opacity = "0.9 0.8",
 })
-
--- ── Power Menu (eww) ──────────────────────────────────────────────────
--- La ventana eww del power menu se trata como overlay fullscreen flotante.
--- `stay_focused` evita que pierda el foco al hacer clic en botones internos.
--- `pin` la mantiene visible en todos los workspaces.
-
-hl.window_rule({
-    name = "float-power-menu",
-    match = { class = "power-menu" },
-    float = true,
-})
-
-hl.window_rule({
-    name = "pin-power-menu",
-    match = { class = "power-menu" },
-    pin = true,
-})
-
-hl.window_rule({
-    name = "focus-power-menu",
-    match = { class = "power-menu" },
-    stay_focused = true,
-})
-
-hl.window_rule({
-    name = "noborder-power-menu",
-    match = { class = "power-menu" },
-    rounding = 0,
-})

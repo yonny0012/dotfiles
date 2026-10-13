@@ -17,8 +17,7 @@
   :monitor 0
   :geometry (geometry :x "20px" :y "20px" :width "420px" :height "600px" :anchor "top right")
   :stacking "fg"
-  :windowtype "normal"
-  :wm-ignore false
+  :namespace "eww-dashboard"
   (dashboard-widget))
 
 (defwidget dashboard-widget []
