@@ -5,13 +5,12 @@
 
 hl.on("hyprland.start", function()
     -- Demonios esenciales
-    hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
+    hl.exec_cmd("systemctl --user start hyprpolkitagent")
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
     hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
     hl.exec_cmd("waybar")
     hl.exec_cmd("eww daemon")
     hl.exec_cmd("mako")
-    hl.exec_cmd("cliphist daemon") -- Historial del portapapeles
     hl.exec_cmd("udiskie") -- monta discos y unidades removibles
     hl.exec_cmd("hypridle")
 
@@ -20,7 +19,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
 
     -- Wallpaper daemon
-    hl.exec_cmd("swaybg -m fill -i ~/Pictures/background.jpg")
+    hl.exec_cmd("swaybg -m fill -i ~/Pictures/wallpapers/background.jpg")
 
     -- Cursor
     hl.exec_cmd("hyprctl setcursor Bibata-Modern-Ice 24")
