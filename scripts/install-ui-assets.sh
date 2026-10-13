@@ -1,30 +1,19 @@
-#!/bin/bash
-# install-ui-assets.sh - Sync backgrounds and Regreet config to system paths
+#!/usr/bin/env bash
+# install-ui-assets.sh - Copia el fondo y la config del greeter de LightDM
+# (slick-greeter) a rutas del sistema. $HOME es 700, así que lightdm no puede
+# leerlos desde el repo: hay que copiarlos, no enlazarlos.
+# Uso: bash ~/dotfiles/scripts/install-ui-assets.sh   (pide sudo)
 
-set -e
+set -euo pipefail
 
-# Paths
-DOTFILES_DIR="$HOME/dotfiles"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BACKGROUND_SRC="$DOTFILES_DIR/wallpapers/Pictures/wallpapers/background.jpg"
-REGREET_CONFIG_SRC="$DOTFILES_DIR/regreet/etc/greetd/regreet.toml"
-REGREET_STYLE_SRC="$DOTFILES_DIR/regreet/etc/greetd/style.css"
+GREETER_SRC="$DOTFILES_DIR/lightdm/slick-greeter.conf"
 
-BACKGROUND_DEST="/usr/share/backgrounds/background.jpg"
-GREETD_DIR="/etc/greetd"
+for f in "$BACKGROUND_SRC" "$GREETER_SRC"; do
+    [ -f "$f" ] || { echo "Error: no existe $f"; exit 1; }
+done
 
-echo "Checking assets..."
-
-if [ ! -f "$BACKGROUND_SRC" ]; then
-    echo "Error: Background source not found at $BACKGROUND_SRC"
-    exit 1
-fi
-
-echo "To install these assets, run the following commands with sudo:"
-echo ""
-echo "sudo mkdir -p /usr/share/backgrounds"
-echo "sudo cp \"$BACKGROUND_SRC\" \"$BACKGROUND_DEST\""
-echo "sudo cp \"$REGREET_CONFIG_SRC\" \"$GREETD_DIR/regreet.toml\""
-echo "sudo cp \"$REGREET_STYLE_SRC\" \"$GREETD_DIR/style.css\""
-echo "sudo chmod 644 \"$BACKGROUND_DEST\" \"$GREETD_DIR/regreet.toml\" \"$GREETD_DIR/style.css\""
-echo ""
-echo "Note: The home directory $HOME is 700, so assets must be in system paths."
+sudo install -Dm644 "$BACKGROUND_SRC" /usr/share/backgrounds/background.jpg
+sudo install -Dm644 "$GREETER_SRC" /etc/lightdm/slick-greeter.conf
+echo "✅ Fondo y greeter instalados. Se verán en el próximo inicio de sesión."
