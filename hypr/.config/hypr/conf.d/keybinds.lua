@@ -56,6 +56,9 @@ hl.bind(mainMod .. " + S", hl.dsp.exec_cmd("SRC=$(slurp) && grim -g \"$SRC\" - |
 -- Historial del portapapeles visual (Estilo Win + V)
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("cliphist list | wofi --dmenu | cliphist decode | wl-copy"))
 
+-- Notification actions (mako has no buttons; e.g. Bluetooth pairing accept/reject)
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("makoctl menu wofi --dmenu -p 'Action'"))
+
 -- ── Movimientos de ventanas (mouse) ─────────────────────────────────────────
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
