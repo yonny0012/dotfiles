@@ -40,8 +40,8 @@
       (box
         :class "album-art"
         :style "background-image: url('${music.cover}');"
-        :width 68
-        :height 68
+        :width 52
+        :height 52
         :valign "center")
 
       ;; Song info & Transport controls

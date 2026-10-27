@@ -15,8 +15,7 @@ window {
 .dashboard-container {
   background-color: $bg-glass-base;
   border-radius: $radius-window;
-  margin: 16px;
-  padding: $padding-lg;
+  padding: 12px;
   border: 1px solid $bg-glass-border;
   box-shadow: 0 16px 40px $bg-glass-shadow;
 }
@@ -27,16 +26,16 @@ window {
 }
 
 .header-left {
-  padding: 4px 6px;
+  padding: 2px 4px;
 }
 
 .header-badge-icon {
-  font-size: 16px;
+  font-size: 15px;
   color: $accent-vol;
 }
 
 .header-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: $fg-primary;
 }
@@ -45,7 +44,7 @@ window {
   background-color: $tile-glass-bg;
   border: 1px solid $tile-glass-border;
   border-radius: $radius-pill;
-  padding: 5px 12px;
+  padding: 4px 10px;
   color: $fg-secondary;
   transition: background-color 150ms ease, border-color 150ms ease;
 
@@ -57,7 +56,7 @@ window {
 }
 
 .header-btn-icon {
-  font-size: 13px;
+  font-size: 12px;
   color: $accent-net;
 }
 
@@ -70,11 +69,11 @@ window {
   background-color: $tile-glass-bg;
   border: 1px solid transparent;
   border-radius: $radius-pill;
-  padding: 4px 10px;
-  font-size: 13px;
+  padding: 3px 8px;
+  font-size: 12px;
   color: $fg-muted;
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 26px;
+  min-height: 26px;
   transition: background-color 150ms ease, color 150ms ease;
 
   &:hover {
@@ -88,7 +87,7 @@ window {
 .section-box {
   background-color: $card-glass-bg;
   border-radius: $radius-card;
-  padding: $padding-md;
+  padding: 10px 12px;
   border: 1px solid $card-glass-border;
   box-shadow: 0 4px 16px $card-glass-shadow;
   transition: background-color 200ms ease, border-color 200ms ease;
@@ -100,11 +99,11 @@ window {
 }
 
 .section-header {
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .section-icon {
-  font-size: 15px;
+  font-size: 14px;
   color: $fg-detail;
 }
 
@@ -112,5 +111,4 @@ window {
   font-size: 12px;
   font-weight: 700;
   color: $fg-secondary;
-  text-transform: uppercase;
 }

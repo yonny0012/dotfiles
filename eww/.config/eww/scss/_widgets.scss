@@ -7,7 +7,7 @@
   background-color: $tile-glass-bg;
   border-radius: $radius-tile;
   border: 1px solid $tile-glass-border;
-  padding: 10px 8px;
+  padding: 6px 4px;
   transition: background-color 180ms ease, border-color 180ms ease;
 
   &:hover {
@@ -16,72 +16,43 @@
   }
 }
 
-.circular-metric {
-  min-width: $circle-size;
-}
-
-// Track ring (unfilled background circle at 100%)
-.metric-track {
-  min-width: $circle-size;
-  min-height: $circle-size;
-  background-color: transparent;
-  color: rgba(255, 255, 255, 0.08);
-  padding: 2px;
-
-  &.cpu {
-    color: rgba(243, 139, 168, 0.15);
-  }
-
-  &.ram {
-    color: rgba(166, 227, 161, 0.15);
-  }
-
-  &.disk {
-    color: rgba(249, 226, 175, 0.15);
-  }
-
-  &.gpu {
-    color: rgba(203, 166, 247, 0.15);
-  }
-}
-
-// Progress arc (filled portion)
+// Progress arc and background track (according to official Eww docs)
 .metric-circle {
-  min-width: $circle-size;
-  min-height: $circle-size;
-  background-color: transparent;
-  padding: 2px;
-
   &.cpu {
     color: $accent-cpu;
+    background-color: rgba(243, 139, 168, 0.20);
   }
 
   &.ram {
     color: $accent-ram;
+    background-color: rgba(166, 227, 161, 0.20);
   }
 
   &.disk {
     color: $accent-disk;
+    background-color: rgba(249, 226, 175, 0.20);
   }
 
   &.gpu {
     color: $accent-gpu;
+    background-color: rgba(203, 166, 247, 0.20);
   }
 }
 
+.circle-inner {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 5px;
+}
+
 .circle-value {
-  font-size: $font-size-circle-value;
+  font-size: 10px;
   font-weight: 700;
   color: $fg-primary;
-
-  &.cpu { color: $accent-cpu; }
-  &.ram { color: $accent-ram; }
-  &.disk { color: $accent-disk; }
-  &.gpu { color: $accent-gpu; }
 }
 
 .circle-icon {
-  font-size: 13px;
+  font-size: 11px;
 
   &.cpu { color: $accent-cpu; }
   &.ram { color: $accent-ram; }
@@ -90,32 +61,32 @@
 }
 
 .circle-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: $fg-secondary;
 }
 
 .circle-detail {
-  font-size: 10px;
+  font-size: 9px;
   color: $fg-muted;
 }
 
 // --- Network Row ---
 .net-row {
-  padding: 8px 10px;
+  padding: 4px 8px;
   background-color: $tile-glass-bg;
   border-radius: $radius-tile;
   border: 1px solid $tile-glass-border;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .net-icon {
-  font-size: 15px;
+  font-size: 13px;
   color: $accent-net;
 }
 
 .net-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: $fg-secondary;
 }
@@ -123,7 +94,7 @@
 .net-badge {
   background-color: rgba(255, 255, 255, 0.06);
   border-radius: $radius-pill;
-  padding: 3px 8px;
+  padding: 2px 6px;
   border: 1px solid rgba(255, 255, 255, 0.06);
 
   &.down {
@@ -136,12 +107,12 @@
 }
 
 .net-arrow {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
 }
 
 .net-speed {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: $fg-secondary;
 }
@@ -151,7 +122,7 @@
   background-color: $tile-glass-bg;
   border: 1px solid $tile-glass-border;
   border-radius: $radius-pill;
-  padding: 6px 14px;
+  padding: 4px 10px;
   transition: background-color 150ms ease, border-color 150ms ease;
 
   &:hover {
@@ -162,13 +133,17 @@
 
 .media-btn {
   border-radius: $radius-pill;
-  padding: 6px;
-  min-width: 30px;
-  min-height: 30px;
+  padding: 3px;
+  min-width: 24px;
+  min-height: 24px;
   transition: background-color 150ms ease, color 150ms ease;
 
-  &:hover:not(.static) {
+  &:hover {
     background-color: rgba(255, 255, 255, 0.12);
+  }
+
+  &.static:hover {
+    background-color: transparent;
   }
 
   &.muted {
@@ -181,7 +156,7 @@
 }
 
 .media-icon {
-  font-size: 17px;
+  font-size: 15px;
 
   &.vol {
     color: $accent-vol;
@@ -193,24 +168,24 @@
 }
 
 .media-slider {
-  min-height: 22px;
+  min-height: 18px;
 
   trough {
     background-color: rgba(255, 255, 255, 0.10);
     border-radius: $radius-pill;
-    min-height: 8px;
+    min-height: 7px;
 
     highlight {
       border-radius: $radius-pill;
-      min-height: 8px;
+      min-height: 7px;
     }
 
     slider {
-      min-width: 16px;
-      min-height: 16px;
+      min-width: 13px;
+      min-height: 13px;
       border-radius: 50%;
       background-color: $fg-primary;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
     }
   }
 
@@ -225,7 +200,7 @@
 
 .media-value {
   font-weight: 700;
-  font-size: 11px;
+  font-size: 10px;
   color: $fg-secondary;
 }
 
@@ -235,9 +210,9 @@
 }
 
 .music-status-badge {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 2px 6px;
   border-radius: $radius-pill;
   background-color: rgba(255, 255, 255, 0.06);
   color: $fg-muted;
@@ -254,41 +229,40 @@
 }
 
 .album-art {
-  min-width: 68px;
-  min-height: 68px;
-  border-radius: 14px;
+  min-width: 52px;
+  min-height: 52px;
+  border-radius: 10px;
   background-position: center;
-  background-size: cover;
   background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
 }
 
 .music-song {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   color: $fg-primary;
 }
 
 .music-artist {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   color: $fg-muted;
 }
 
 .music-controls {
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .music-btn {
-  font-size: 15px;
+  font-size: 13px;
   color: $fg-secondary;
-  padding: 6px;
+  padding: 4px;
   border-radius: $radius-pill;
   background-color: $tile-glass-bg;
   border: 1px solid $tile-glass-border;
-  min-width: 32px;
-  min-height: 32px;
+  min-width: 26px;
+  min-height: 26px;
   transition: background-color 150ms ease, color 150ms ease;
 
   &:hover {
@@ -298,7 +272,7 @@
   }
 
   &.play {
-    font-size: 16px;
+    font-size: 14px;
     background-color: rgba(137, 180, 250, 0.20);
     border-color: rgba(137, 180, 250, 0.35);
     color: $accent-vol;
@@ -311,12 +285,12 @@
 }
 
 .music-progress-row {
-  margin-top: 4px;
-  padding: 2px 4px;
+  margin-top: 2px;
+  padding: 0 2px;
 }
 
 .music-slider {
-  min-height: 14px;
+  min-height: 12px;
 
   trough {
     background-color: rgba(255, 255, 255, 0.10);
@@ -330,18 +304,18 @@
     }
 
     slider {
-      min-width: 10px;
-      min-height: 10px;
+      min-width: 8px;
+      min-height: 8px;
       border-radius: 50%;
       background-color: $fg-primary;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     }
   }
 }
 
 .music-time {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 500;
   color: $fg-muted;
-  min-width: 30px;
+  min-width: 26px;
 }

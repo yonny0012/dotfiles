@@ -12,53 +12,36 @@
   (box
     :class "metric-card"
     :orientation "v"
-    :spacing 6
+    :spacing 4
     :space-evenly false
     :halign "fill"
     :hexpand true
-    (overlay
-      ;; Track ring (unfilled background circle)
-      (circular-progress
-        :class "metric-track ${color-class}"
-        :value 100
-        :thickness 6
-        :start-at 75
-        :clockwise true)
-      ;; Progress arc (filled portion)
-      (circular-progress
-        :class "metric-circle ${color-class}"
-        :value {value ?: 0}
-        :thickness 6
-        :start-at 75
-        :clockwise true)
-      ;; Value inside the ring
+    (circular-progress
+      :class "metric-circle ${color-class}"
+      :value {value ?: 0}
+      :thickness 5
+      :start-at 75
+      :clockwise true
       (box
-        :orientation "v"
-        :spacing 0
-        :space-evenly false
-        :valign "center"
+        :class "circle-inner"
         :halign "center"
-        (label :text "${value}%" :class "circle-value ${color-class}")))
+        :valign "center"
+        (label :text "${value}%" :class "circle-value")))
     (box
-      :orientation "v"
-      :spacing 2
+      :orientation "h"
+      :spacing 4
       :space-evenly false
       :halign "center"
-      (box
-        :orientation "h"
-        :spacing 4
-        :space-evenly false
-        :halign "center"
-        (label :text icon :class "circle-icon ${color-class}")
-        (label :text label :class "circle-label"))
-      (label :text detail :class "circle-detail"))))
+      (label :text icon :class "circle-icon ${color-class}")
+      (label :text label :class "circle-label"))
+    (label :text detail :class "circle-detail")))
 
 ;; --- System section ---
 (defwidget system-section []
   (box
     :class "section-box"
     :orientation "v"
-    :spacing 10
+    :spacing 8
     :space-evenly false
 
     ;; Header
@@ -79,7 +62,7 @@
       ;; Row 1: CPU + RAM
       (box
         :orientation "h"
-        :spacing 10
+        :spacing 8
         :space-evenly true
         (circular-metric
           :value {metrics.cpu}
@@ -97,7 +80,7 @@
       ;; Row 2: Disk + GPU
       (box
         :orientation "h"
-        :spacing 10
+        :spacing 8
         :space-evenly true
         (circular-metric
           :value {metrics.disk}
