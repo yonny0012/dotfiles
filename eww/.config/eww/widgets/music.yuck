@@ -1,9 +1,8 @@
 ;; ============================================
-;; Music Player — MPD via mpc
+;; Music Player — MPD via mpc (Liquid Glass Card)
 ;; ============================================
 
 ;; --- Poll ---
-;; A single call returns every field as JSON (see scripts/music_info.sh).
 (defpoll music :interval "1s"
   :initial '{"status":"stopped","song":"Offline","artist":"Offline","progress":0,"ctime":"0:00","ttime":"0:00","cover":""}'
   `scripts/music_info.sh --all`)
@@ -13,7 +12,7 @@
   (box
     :class "section-box music-box"
     :orientation "v"
-    :spacing 8
+    :spacing 10
     :space-evenly false
 
     ;; Header
@@ -23,12 +22,17 @@
       :spacing 8
       :space-evenly false
       (label :text "󰎈" :class "section-icon")
-      (label :text "Música" :class "section-title"))
+      (label :text "Multimedia" :class "section-title")
+      (label
+        :class "music-status-badge ${music.status}"
+        :text {music.status == "playing" ? "Reproduciendo" : (music.status == "paused" ? "Pausado" : "Detenido")}
+        :halign "end"
+        :hexpand true))
 
-    ;; Cover + info
+    ;; Content: Album Art + Track Info + Transport
     (box
       :orientation "h"
-      :spacing 12
+      :spacing 14
       :space-evenly false
       :hexpand true
 
@@ -36,13 +40,14 @@
       (box
         :class "album-art"
         :style "background-image: url('${music.cover}');"
-        :width 64
-        :height 64)
+        :width 68
+        :height 68
+        :valign "center")
 
-      ;; Song info + controls
+      ;; Song info & Transport controls
       (box
         :orientation "v"
-        :spacing 4
+        :spacing 6
         :space-evenly false
         :hexpand true
         :valign "center"
@@ -54,33 +59,39 @@
         (label
           :class "music-artist"
           :halign "start"
-          :limit-width 20
-          :text {music.artist ?: "—"})))
+          :limit-width 24
+          :text {music.artist ?: "—"})
 
-    ;; Transport controls
-    (box
-      :orientation "h"
-      :spacing 16
-      :halign "center"
-      :space-evenly false
-      (button
-        :class "music-btn"
-        :onclick "scripts/music_info.sh --prev"
-        (label :text "󰒮"))
-      (button
-        :class "music-btn play"
-        :onclick "scripts/music_info.sh --toggle"
-        (label :text "${music.status == 'playing' ? '󰏤' : '󰐊'}"))
-      (button
-        :class "music-btn"
-        :onclick "scripts/music_info.sh --next"
-        (label :text "󰒭")))
+        ;; Transport controls
+        (box
+          :class "music-controls"
+          :orientation "h"
+          :spacing 10
+          :halign "start"
+          :space-evenly false
+          (button
+            :class "music-btn prev"
+            :onclick "scripts/music_info.sh --prev"
+            :tooltip "Anterior"
+            (label :text "󰒮"))
+          (button
+            :class "music-btn play ${music.status}"
+            :onclick "scripts/music_info.sh --toggle"
+            :tooltip "Reproducir / Pausar"
+            (label :text "${music.status == 'playing' ? '󰏤' : '󰐊'}"))
+          (button
+            :class "music-btn next"
+            :onclick "scripts/music_info.sh --next"
+            :tooltip "Siguiente"
+            (label :text "󰒭")))))
 
     ;; Progress bar
     (box
+      :class "music-progress-row"
       :orientation "h"
       :spacing 8
       :space-evenly false
+      :valign "center"
       (label :text {music.ctime ?: "0:00"} :class "music-time")
       (scale
         :class "music-slider"

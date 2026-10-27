@@ -1,5 +1,5 @@
 ;; ============================================
-;; System Metrics — Circular Progress
+;; System Metrics — Circular Progress & Glass Cards
 ;; ============================================
 
 ;; --- JSON stream from metric_collector ---
@@ -10,41 +10,55 @@
 ;; --- Reusable circular metric widget ---
 (defwidget circular-metric [value icon label detail color-class]
   (box
-    :class "circular-metric"
+    :class "metric-card"
     :orientation "v"
-    :spacing 2
+    :spacing 6
     :space-evenly false
-    :halign "center"
+    :halign "fill"
+    :hexpand true
     (overlay
-      ;; Track ring (unfilled background)
+      ;; Track ring (unfilled background circle)
       (circular-progress
         :class "metric-track ${color-class}"
         :value 100
-        :thickness 8
+        :thickness 6
         :start-at 75
         :clockwise true)
       ;; Progress arc (filled portion)
       (circular-progress
         :class "metric-circle ${color-class}"
         :value {value ?: 0}
-        :thickness 8
+        :thickness 6
         :start-at 75
         :clockwise true)
-      (label :text "${value}%" :class "circle-value"))
+      ;; Value inside the ring
+      (box
+        :orientation "v"
+        :spacing 0
+        :space-evenly false
+        :valign "center"
+        :halign "center"
+        (label :text "${value}%" :class "circle-value ${color-class}")))
     (box
-      :orientation "h"
-      :spacing 4
+      :orientation "v"
+      :spacing 2
+      :space-evenly false
       :halign "center"
-      (label :text icon :class "circle-icon")
-      (label :text label :class "circle-label"))
-    (label :text detail :class "circle-detail")))
+      (box
+        :orientation "h"
+        :spacing 4
+        :space-evenly false
+        :halign "center"
+        (label :text icon :class "circle-icon ${color-class}")
+        (label :text label :class "circle-label"))
+      (label :text detail :class "circle-detail"))))
 
 ;; --- System section ---
 (defwidget system-section []
   (box
     :class "section-box"
     :orientation "v"
-    :spacing 8
+    :spacing 10
     :space-evenly false
 
     ;; Header
@@ -56,7 +70,7 @@
       (label :text "󰍛" :class "section-icon")
       (label :text "Sistema" :class "section-title"))
 
-    ;; Circular metrics — 2x2 grid
+    ;; Circular metrics — 2x2 grid with glass cards
     (box
       :orientation "v"
       :spacing 8
@@ -65,7 +79,7 @@
       ;; Row 1: CPU + RAM
       (box
         :orientation "h"
-        :spacing 12
+        :spacing 10
         :space-evenly true
         (circular-metric
           :value {metrics.cpu}
@@ -83,7 +97,7 @@
       ;; Row 2: Disk + GPU
       (box
         :orientation "h"
-        :spacing 12
+        :spacing 10
         :space-evenly true
         (circular-metric
           :value {metrics.disk}
@@ -98,18 +112,34 @@
           :detail "${metrics.gpu_temp}"
           :color-class "gpu")))
 
-    ;; Network row
+    ;; Network row — Pill style
     (box
       :class "net-row"
       :orientation "h"
       :spacing 10
       :space-evenly false
       :valign "center"
-      (label :text "󰤨" :class "net-icon")
-      (label :text "Red" :class "net-label")
+      (box
+        :orientation "h"
+        :spacing 6
+        :space-evenly false
+        (label :text "󰤨" :class "net-icon")
+        (label :text "Red" :class "net-label"))
       (box
         :hexpand true
         :halign "end"
-        :spacing 12
-        (label :text "↓ ${metrics.net_down_speed}" :class "net-speed net-down")
-        (label :text "↑ ${metrics.net_up_speed}" :class "net-speed net-up")))))
+        :spacing 8
+        (box
+          :class "net-badge down"
+          :orientation "h"
+          :spacing 4
+          :space-evenly false
+          (label :text "↓" :class "net-arrow down")
+          (label :text {metrics.net_down_speed} :class "net-speed"))
+        (box
+          :class "net-badge up"
+          :orientation "h"
+          :spacing 4
+          :space-evenly false
+          (label :text "↑" :class "net-arrow up")
+          (label :text {metrics.net_up_speed} :class "net-speed"))))))

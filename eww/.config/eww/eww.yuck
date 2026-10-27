@@ -1,39 +1,75 @@
 ;; ============================================
-;; EWW Dashboard - PipeWire + Brightnessctl
+;; EWW Dashboard — Liquid Glass Control Center
 ;; ============================================
-;; Modular architecture: all widgets in widgets/
 
 (include "widgets/system.yuck")
 (include "widgets/media.yuck")
 (include "widgets/music.yuck")
-(include "widgets/session.yuck")
 (include "widgets/wifi_menu.yuck")
 (include "./widgets/session-2.yuck")
 
 ;; ============================================
-;; VENTANA
+;; HEADER WIDGET
 ;; ============================================
-(defwindow dashboard
-  :monitor 0
-  :geometry (geometry :x "20px" :y "20px" :width "420px" :height "600px" :anchor "top right")
-  :stacking "fg"
-  :namespace "eww-dashboard"
-  (dashboard-widget))
+(defwidget dashboard-header []
+  (box
+    :class "dashboard-header"
+    :orientation "h"
+    :space-evenly false
+    (box
+      :class "header-left"
+      :orientation "h"
+      :space-evenly false
+      :spacing 8
+      :halign "start"
+      (label :class "header-badge-icon" :text "󰅃")
+      (label :class "header-title" :text "Control Center"))
+    (box
+      :class "header-actions"
+      :orientation "h"
+      :space-evenly false
+      :spacing 8
+      :halign "end"
+      :hexpand true
+      (button
+        :class "header-pill-btn"
+        :onclick "eww open --toggle wifi_menu"
+        :tooltip "Redes Wi-Fi"
+        (box
+          :spacing 6
+          :space-evenly false
+          (label :class "header-btn-icon" :text "󰤨")
+          (label :class "header-btn-text" :text "Wi-Fi")))
+      (button
+        :class "header-close-btn"
+        :onclick "eww close dashboard"
+        :tooltip "Cerrar"
+        (label :text "✕")))))
 
+;; ============================================
+;; MAIN DASHBOARD CONTAINER
+;; ============================================
 (defwidget dashboard-widget []
   (box
     :class "dashboard-container"
     :orientation "v"
-    :spacing 12
+    :spacing 14
     :space-evenly false
+    (dashboard-header)
     (system-section)
     (media-section)
-    (music-section)
-    (session-section)))
+    (music-section)))
 
 ;; ============================================
-;; VENTANA DEL SELECTOR WIFI
+;; WINDOW DEFINITIONS
 ;; ============================================
+(defwindow dashboard
+  :monitor 0
+  :geometry (geometry :x "20px" :y "20px" :width "440px" :height "570px" :anchor "top right")
+  :stacking "fg"
+  :namespace "eww-dashboard"
+  (dashboard-widget))
+
 (defwindow wifi_menu
   :monitor 0
   :geometry (geometry :x "0%" :y "5%" :width "300px" :height "400px" :anchor "top right")

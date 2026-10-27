@@ -18,7 +18,7 @@ hl.layer_rule({
     name = "blur-eww-dashboard",
     match = { namespace = "eww-dashboard" },
     blur = true,
-    ignore_alpha = 0.5,
+    ignore_alpha = 0.1,
 })
 
 hl.layer_rule({
@@ -113,7 +113,7 @@ hl.window_rule({
 
 hl.window_rule({
     name = "float-cava",
-    match = { class = "ncmpcpp", title = "^(cava)$" },
+    match = { class = "^(cava)$" },
     float = true,
     opacity = "0.9 0.9",
 })
@@ -174,6 +174,16 @@ hl.window_rule({
     match = { title = "^(meet\\.google\\.com is sharing your screen\\.)$" },
     float = true,
     move = "0 (monitor_h-330)",
+})
+
+-- ── Juegos (Steam / Proton) ──────────────────────────────────────────
+-- Las ventanas de juegos de Steam en XWayland llevan WM_CLASS
+-- `steam_app_<appid>`. Sin regla, hypridle puede bloquear la pantalla a
+-- mitad de partida (GameMode inhibe el idle del sistema, no el de Hyprland).
+hl.window_rule({
+    name = "game-idle-inhibit",
+    match = { class = "^(steam_app_[0-9]+)$" },
+    idle_inhibit = "fullscreen",
 })
 
 -- ── Música & Monitoreo ────────────────────────────────────────────────

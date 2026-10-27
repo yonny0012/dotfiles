@@ -1,53 +1,72 @@
 // ============================================
-// Design Tokens — Nord-based Premium Palette
+// Design Tokens — Liquid Glass (macOS / Apple Style)
 // ============================================
+// NOTA: Se usan valores rgb/rgba explícitos por compatibilidad
+// con el compilador SCSS grass de EWW.
 
-// Backgrounds
-$bg-primary: #2e3440;
-$bg-secondary: #3b4252;
-$bg-tertiary: #434c5e;
-$bg-hover: #4c566a;
+// --- Liquid Glass Surface Tokens ---
+$bg-glass-base:         rgba(20, 22, 34, 0.42);
+$bg-glass-border:       rgba(255, 255, 255, 0.16);
+$bg-glass-highlight:    rgba(255, 255, 255, 0.22);
+$bg-glass-shadow:       rgba(0, 0, 0, 0.45);
+
+// Bento Glass Cards (Tarjetas interiores)
+$card-glass-bg:         rgba(255, 255, 255, 0.05);
+$card-glass-bg-hover:   rgba(255, 255, 255, 0.08);
+$card-glass-border:     rgba(255, 255, 255, 0.10);
+$card-glass-shadow:     rgba(0, 0, 0, 0.20);
+
+// Sub-tiles & Interactive Pills (Sliders, micro-cards, buttons)
+$tile-glass-bg:         rgba(255, 255, 255, 0.06);
+$tile-glass-bg-hover:   rgba(255, 255, 255, 0.12);
+$tile-glass-bg-active:  rgba(255, 255, 255, 0.18);
+$tile-glass-border:     rgba(255, 255, 255, 0.09);
 
 // Foregrounds
-$fg-primary: #eceff4;
-$fg-secondary: #d8dee9;
-$fg-muted: #4c566a;
-$fg-detail: #81a1c1;
+$fg-primary:            #ffffff;
+$fg-secondary:          #cdd6f4;
+$fg-muted:              #8b92b2;
+$fg-detail:             #89b4fa;
 
-// Accent colors (metrics)
-$accent-cpu: #bf616a;
-$accent-ram: #a3be8c;
-$accent-disk: #ebcb8b;
-$accent-net: #81a1c1;
-$accent-gpu: #b48ead;
-$accent-vol: #d08770;
-$accent-bright: #e5e9f0;
-
-// Session accents
-$accent-power: #bf616a;
-$accent-reboot: #ebcb8b;
-$accent-lock: #a3be8c;
-$accent-logout: #81a1c1;
-
-// Glass effect
-$glass-bg: rgba(59, 66, 82, 0.85);
-$glass-border: rgba(136, 192, 208, 0.15);
-$glass-shadow: rgba(0, 0, 0, 0.4);
+// Accents (Apple / Catppuccin vibrant palette)
+$accent-cpu:            #f38ba8;
+$accent-ram:            #a6e3a1;
+$accent-disk:           #f9e2af;
+$accent-gpu:            #cba6f7;
+$accent-net:            #89b4fa;
+$accent-vol:            #89b4fa;
+$accent-bright:         #f9e2af;
 
 // Typography
-$font-size-xs: 10px;
-$font-size-small: 12px;
-$font-size-normal: 14px;
-$font-size-large: 16px;
-$font-size-icon: 18px;
-$font-size-circle-value: 13px;
+$font-family:           "JetBrainsMono Nerd Font", "Symbols Nerd Font", sans-serif;
+$font-size-xs:          10px;
+$font-size-small:       12px;
+$font-size-normal:      14px;
+$font-size-large:       16px;
+$font-size-icon:        18px;
+$font-size-circle-value: 12px;
+
+// Geometry & Radii
+$radius-window:         26px;
+$radius-card:           18px;
+$radius-tile:           14px;
+$radius-pill:           999px;
+$radius-sm:             8px;
 
 // Spacing
-$padding-sm: 6px;
-$padding-md: 12px;
-$padding-lg: 16px;
-$radius: 12px;
-$radius-sm: 8px;
+$padding-xs:            4px;
+$padding-sm:            8px;
+$padding-md:            14px;
+$padding-lg:            18px;
 
-// Circular progress
-$circle-size: 64px;
+// Circular progress size
+$circle-size:           64px;
+
+// --- Compatibilidad / Aliases para widgets secundarios (wifi, monitor) ---
+$bg-primary:            rgba(20, 22, 34, 0.85);
+$bg-secondary:          rgba(30, 33, 50, 0.75);
+$bg-tertiary:           rgba(45, 50, 75, 0.50);
+$bg-hover:              rgba(255, 255, 255, 0.12);
+$glass-bg:              $bg-glass-base;
+$glass-border:          $bg-glass-border;
+$glass-shadow:          $bg-glass-shadow;

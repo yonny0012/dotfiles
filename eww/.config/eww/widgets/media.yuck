@@ -15,9 +15,9 @@
 ;; --- Media section ---
 (defwidget media-section []
   (box
-    :class "section-box"
+    :class "section-box media-box"
     :orientation "v"
-    :spacing 12
+    :spacing 10
     :space-evenly false
 
     ;; Header
@@ -29,16 +29,17 @@
       (label :text "󰕾" :class "section-icon")
       (label :text "Controles" :class "section-title"))
 
-    ;; Volume
+    ;; Volume Card
     (box
+      :class "slider-card vol-card"
       :orientation "h"
       :spacing 10
       :space-evenly false
       :valign "center"
-      :vexpand false
       (button
         :onclick "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        :class "media-btn"
+        :class "media-btn ${volume_muted == 'true' ? 'muted' : ''}"
+        :tooltip "Silenciar / Activar sonido"
         (label
           :text "${volume_muted == 'true' ? '󰖁' : ((volume_level ?: 0) < 30 ? '󰕿' : ((volume_level ?: 0) < 70 ? '󰖀' : '󰕾'))}"
           :class "media-icon vol"))
@@ -50,18 +51,20 @@
         :min 0
         :max 100
         :onchange "wpctl set-volume @DEFAULT_AUDIO_SINK@ {}%")
-      (label :text "${volume_level}%" :class "media-value" :width 45))
+      (label :text "${volume_level}%" :class "media-value" :width 40))
 
-    ;; Brightness
+    ;; Brightness Card
     (box
+      :class "slider-card bright-card"
       :orientation "h"
       :spacing 10
       :space-evenly false
       :valign "center"
-      :vexpand false
-      (label
-        :text "${(brightness_level ?: 0) < 30 ? '󰃚' : ((brightness_level ?: 0) < 70 ? '󰃛' : '󰃜')}"
-        :class "media-icon bright")
+      (box
+        :class "media-btn static"
+        (label
+          :text "${(brightness_level ?: 0) < 30 ? '󰃚' : ((brightness_level ?: 0) < 70 ? '󰃛' : '󰃜')}"
+          :class "media-icon bright"))
       (scale
         :orientation "h"
         :class "media-slider bright"
@@ -70,4 +73,4 @@
         :min 0
         :max 100
         :onchange "brightnessctl set {}%")
-      (label :text "${brightness_level}%" :class "media-value" :width 45))))
+      (label :text "${brightness_level}%" :class "media-value" :width 40))))

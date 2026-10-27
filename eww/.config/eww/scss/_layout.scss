@@ -1,43 +1,116 @@
 // ============================================
-// Layout & Structure — Glassmorphism
+// Layout & Structure — Liquid Glass
 // ============================================
 
 * {
   all: unset;
-  font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+  font-family: $font-family;
 }
 
 window {
-  background: none;
+  background: transparent;
 }
 
+// Outer Floating Glass Shell
 .dashboard-container {
-  background-color: $glass-bg;
-  border-radius: $radius;
-  margin: $padding-lg $padding-lg 32px $padding-lg;
+  background-color: $bg-glass-base;
+  border-radius: $radius-window;
+  margin: 16px;
   padding: $padding-lg;
-  border: 1px solid $glass-border;
-  box-shadow: 0 8px 32px $glass-shadow;
+  border: 1px solid $bg-glass-border;
+  box-shadow: 0 16px 40px $bg-glass-shadow;
 }
 
+// Top Header / Navigation Pill Row
+.dashboard-header {
+  padding-bottom: 2px;
+}
+
+.header-left {
+  padding: 4px 6px;
+}
+
+.header-badge-icon {
+  font-size: 16px;
+  color: $accent-vol;
+}
+
+.header-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: $fg-primary;
+}
+
+.header-pill-btn {
+  background-color: $tile-glass-bg;
+  border: 1px solid $tile-glass-border;
+  border-radius: $radius-pill;
+  padding: 5px 12px;
+  color: $fg-secondary;
+  transition: background-color 150ms ease, border-color 150ms ease;
+
+  &:hover {
+    background-color: $tile-glass-bg-hover;
+    border-color: $bg-glass-border;
+    color: $fg-primary;
+  }
+}
+
+.header-btn-icon {
+  font-size: 13px;
+  color: $accent-net;
+}
+
+.header-btn-text {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.header-close-btn {
+  background-color: $tile-glass-bg;
+  border: 1px solid transparent;
+  border-radius: $radius-pill;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: $fg-muted;
+  min-width: 28px;
+  min-height: 28px;
+  transition: background-color 150ms ease, color 150ms ease;
+
+  &:hover {
+    background-color: rgba(243, 139, 168, 0.20);
+    color: #f38ba8;
+    border-color: rgba(243, 139, 168, 0.30);
+  }
+}
+
+// Bento Grid Glass Cards
 .section-box {
-  background-color: rgba(59, 66, 82, 0.6);
-  border-radius: $radius;
+  background-color: $card-glass-bg;
+  border-radius: $radius-card;
   padding: $padding-md;
-  border: 1px solid $glass-border;
+  border: 1px solid $card-glass-border;
+  box-shadow: 0 4px 16px $card-glass-shadow;
+  transition: background-color 200ms ease, border-color 200ms ease;
+
+  &:hover {
+    background-color: $card-glass-bg-hover;
+    border-color: rgba(255, 255, 255, 0.15);
+  }
 }
 
 .section-header {
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .section-icon {
-  font-size: 1.2em;
+  font-size: 15px;
   color: $fg-detail;
 }
 
 .section-title {
-  font-size: 1.1em;
-  font-weight: bold;
-  color: $fg-primary;
+  font-size: 12px;
+  font-weight: 700;
+  color: $fg-secondary;
+  text-transform: uppercase;
 }
