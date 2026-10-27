@@ -17,14 +17,14 @@
   (box
     :class "section-box media-box"
     :orientation "v"
-    :spacing 10
+    :spacing 6
     :space-evenly false
 
     ;; Header
     (box
       :class "section-header"
       :orientation "h"
-      :spacing 8
+      :spacing 6
       :space-evenly false
       (label :text "󰕾" :class "section-icon")
       (label :text "Controles" :class "section-title"))

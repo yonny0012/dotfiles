@@ -12,14 +12,14 @@
   (box
     :class "metric-card"
     :orientation "v"
-    :spacing 4
+    :spacing 3
     :space-evenly false
     :halign "fill"
     :hexpand true
     (circular-progress
       :class "metric-circle ${color-class}"
       :value {value ?: 0}
-      :thickness 5
+      :thickness 4
       :start-at 75
       :clockwise true
       (box
@@ -29,7 +29,7 @@
         (label :text "${value}%" :class "circle-value")))
     (box
       :orientation "h"
-      :spacing 4
+      :spacing 3
       :space-evenly false
       :halign "center"
       (label :text icon :class "circle-icon ${color-class}")
@@ -41,88 +41,76 @@
   (box
     :class "section-box"
     :orientation "v"
-    :spacing 8
+    :spacing 6
     :space-evenly false
 
     ;; Header
     (box
       :class "section-header"
       :orientation "h"
-      :spacing 8
+      :spacing 6
       :space-evenly false
       (label :text "󰍛" :class "section-icon")
       (label :text "Sistema" :class "section-title"))
 
-    ;; Circular metrics — 2x2 grid with glass cards
+    ;; Circular metrics — 4 in 1 row (Bento status pill)
     (box
-      :orientation "v"
-      :spacing 8
-      :space-evenly false
-
-      ;; Row 1: CPU + RAM
-      (box
-        :orientation "h"
-        :spacing 8
-        :space-evenly true
-        (circular-metric
-          :value {metrics.cpu}
-          :icon "󰘚"
-          :label "CPU"
-          :detail "${metrics.cpu_freq} GHz"
-          :color-class "cpu")
-        (circular-metric
-          :value {metrics.ram}
-          :icon "󰍛"
-          :label "RAM"
-          :detail "${metrics.ram_used_gb}/${metrics.ram_total_gb} GB"
-          :color-class "ram"))
-
-      ;; Row 2: Disk + GPU
-      (box
-        :orientation "h"
-        :spacing 8
-        :space-evenly true
-        (circular-metric
-          :value {metrics.disk}
-          :icon "󰋊"
-          :label "Disco"
-          :detail "${metrics.disk_used_gb}/${metrics.disk_total_gb} GB"
-          :color-class "disk")
-        (circular-metric
-          :value {metrics.gpu}
-          :icon "󰢮"
-          :label "GPU"
-          :detail "${metrics.gpu_temp}"
-          :color-class "gpu")))
+      :orientation "h"
+      :spacing 6
+      :space-evenly true
+      (circular-metric
+        :value {metrics.cpu}
+        :icon "󰘚"
+        :label "CPU"
+        :detail "${metrics.cpu_freq}GHz"
+        :color-class "cpu")
+      (circular-metric
+        :value {metrics.ram}
+        :icon "󰍛"
+        :label "RAM"
+        :detail "${metrics.ram_used_gb}/${metrics.ram_total_gb}G"
+        :color-class "ram")
+      (circular-metric
+        :value {metrics.disk}
+        :icon "󰋊"
+        :label "Disco"
+        :detail "${metrics.disk_used_gb}/${metrics.disk_total_gb}G"
+        :color-class "disk")
+      (circular-metric
+        :value {metrics.gpu}
+        :icon "󰢮"
+        :label "GPU"
+        :detail "${metrics.gpu_temp}"
+        :color-class "gpu"))
 
     ;; Network row — Pill style
     (box
       :class "net-row"
       :orientation "h"
-      :spacing 10
+      :spacing 8
       :space-evenly false
       :valign "center"
       (box
         :orientation "h"
-        :spacing 6
+        :spacing 5
         :space-evenly false
         (label :text "󰤨" :class "net-icon")
         (label :text "Red" :class "net-label"))
       (box
         :hexpand true
         :halign "end"
-        :spacing 8
+        :spacing 6
         (box
           :class "net-badge down"
           :orientation "h"
-          :spacing 4
+          :spacing 3
           :space-evenly false
           (label :text "↓" :class "net-arrow down")
           (label :text {metrics.net_down_speed} :class "net-speed"))
         (box
           :class "net-badge up"
           :orientation "h"
-          :spacing 4
+          :spacing 3
           :space-evenly false
           (label :text "↑" :class "net-arrow up")
           (label :text {metrics.net_up_speed} :class "net-speed"))))))
