@@ -75,7 +75,7 @@ cd ~/dotfiles
 ```bash
 sudo apt update
 sudo apt install -y stow hyprland waybar wofi neovim fish kitty zellij starship \
-  eww hyprlock hypridle mako-notifier cliphist udiskie btop mpd cava
+  eww hyprlock hypridle sway-notification-center cliphist udiskie btop mpd mpc ncmpcpp cava
 ```
 
 > **Nota:** `eww` no está empaquetado en los repos de Debian; se recomienda compilarlo

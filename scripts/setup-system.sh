@@ -16,7 +16,7 @@ KEEP=(lightdm slick-greeter lightdm-settings xserver-xorg xwayland
       pipewire-pulse wireplumber)
 
 # Dependencias del setup (binarios que usan hypr, waybar, eww y fish)
-PKGS=(btop mako-notifier hyprlock hypridle swaybg cliphist wl-clipboard
+PKGS=(btop sway-notification-center hyprlock hypridle swaybg cliphist wl-clipboard
       grim slurp brightnessctl playerctl udiskie pavucontrol hyprpolkitagent
       fzf zoxide eza bat jq libnotify-bin papirus-icon-theme
       bibata-cursor-theme golang-go)
