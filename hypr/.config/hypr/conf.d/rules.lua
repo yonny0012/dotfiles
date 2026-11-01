@@ -43,10 +43,17 @@ hl.layer_rule({
 })
 
 hl.layer_rule({
-    name = "blur-notifications",
-    match = { namespace = "mako" },
+    name = "blur-swaync-control-center",
+    match = { namespace = "swaync-control-center" },
     blur = true,
-    ignore_alpha = 0.3,
+    ignore_alpha = 0.2,
+})
+
+hl.layer_rule({
+    name = "blur-swaync-notification-window",
+    match = { namespace = "swaync-notification-window" },
+    blur = true,
+    ignore_alpha = 0.2,
 })
 
 hl.layer_rule({

@@ -10,7 +10,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
     hl.exec_cmd("waybar")
     hl.exec_cmd("eww daemon")
-    hl.exec_cmd("mako")
+    hl.exec_cmd("swaync")
     hl.exec_cmd("udiskie") -- monta discos y unidades removibles
     hl.exec_cmd("hypridle")
 
