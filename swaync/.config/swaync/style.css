@@ -5,6 +5,24 @@
  * Typography: JetBrainsMono Nerd Font
  * ========================================================================== */
 
+:root {
+  --cc-bg: rgba(36, 39, 58, 0.75);
+  --noti-border-color: rgba(255, 255, 255, 0.12);
+  --noti-bg: 36, 39, 58;
+  --noti-bg-alpha: 0.85;
+  --noti-bg-darker: rgb(30, 32, 48);
+  --noti-bg-hover: rgb(54, 58, 79);
+  --noti-bg-focus: rgba(73, 77, 100, 0.75);
+  --noti-close-bg: rgba(255, 255, 255, 0.1);
+  --noti-close-bg-hover: rgba(237, 135, 150, 0.25);
+  --text-color: #cad3f5;
+  --text-color-disabled: #6e738d;
+  --bg-selected: #c6a0f6;
+  --border: 1px solid var(--noti-border-color);
+  --border-radius: 12px;
+  --notification-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
 @define-color base            #24273a;
 @define-color mantle          #1e2030;
 @define-color crust           #181926;
@@ -27,6 +45,10 @@
     font-family: "JetBrainsMono Nerd Font", "Fira Code", sans-serif;
     font-size: 13px;
     font-weight: 500;
+}
+
+notificationwindow, blankwindow {
+    background: transparent;
 }
 
 /* --- [ Floating Notifications Window (Popups) ] --------------------------- */
@@ -133,7 +155,6 @@
     background: transparent;
 }
 
-/* Scrollbar */
 .control-center-list-placeholder {
     opacity: 0.5;
 }
