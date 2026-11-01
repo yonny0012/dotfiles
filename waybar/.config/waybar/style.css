@@ -45,6 +45,7 @@ window#waybar {
 #network,
 #battery,
 #tray,
+#custom-notification,
 #custom-power,
 #custom-launcher {
     padding: 0 12px;
@@ -66,6 +67,7 @@ window#waybar {
 #network:hover,
 #battery:hover,
 #tray:hover,
+#custom-notification:hover,
 #custom-power:hover,
 #custom-launcher:hover {
     background: rgba(91, 96, 120, 0.8);
@@ -179,6 +181,12 @@ window#waybar {
     /* Red */
     background: rgba(237, 135, 150, 0.2);
     animation: blink 2s linear infinite;
+}
+
+#custom-notification {
+    color: #c6a0f6;
+    font-size: 15px;
+    padding: 0 10px;
 }
 
 #custom-power {
