@@ -146,7 +146,7 @@ notificationwindow, blankwindow {
     border: 1px solid @border-glass;
     border-radius: 14px;
     margin: 8px;
-    padding: 14px;
+    padding: 14px 14px 18px 14px;
     color: @text;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
