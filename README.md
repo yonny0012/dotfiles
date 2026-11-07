@@ -54,6 +54,9 @@ Un repositorio modular, minimalista y glassmórfico gestionado con **GNU Stow**.
 │   └── .config/zellij/
 ├── starship/           # Prompt
 │   └── .config/
+├── gamemode/           # Perfil de rendimiento para juegos
+├── mangohud/           # OSD de fps/frametimes
+├── GAMING.md           # Guía de gaming (Steam/Proton, referencias)
 ├── scripts/            # Setup del sistema (requiere sudo) — no es paquete Stow
 │   ├── setup-system.sh # Dependencias, eww/waybar desde git y rendimiento
 │   └── install-ui-assets.sh # Greeter de LightDM y fondo
@@ -69,6 +72,8 @@ Un repositorio modular, minimalista y glassmórfico gestionado con **GNU Stow**.
 > sistema, y los scripts lo **copian** (`install -Dm644`), no lo enlazan: `$HOME`
 > es `700` y los servicios del sistema no pueden leerlo, y un enlace dejaría
 > configuración de root editable por el usuario.
+
+> 🎮 **Gaming:** Steam/Proton y Heroic sobre esta base → ver [`GAMING.md`](GAMING.md).
 
 ---
 
