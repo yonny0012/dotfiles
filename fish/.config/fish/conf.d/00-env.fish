@@ -41,12 +41,31 @@ fish_add_path -g ~/.local/bin
 # set -gx no_proxy "10.*, localhost, *uci.cu"
 
 # === === === === ===
+# Java (JDK)
+# === === === === ===
+# JAVA_HOME fijado a JDK 17 (Android/Odoo) aunque haya otros JDK instalados.
+# Para seguir al `java` activo de update-alternatives, usar la línea comentada.
+if type -q java
+    # set -gx JAVA_HOME (path resolve (command -v java) | path dirname | path dirname)
+    set -gx JAVA_HOME /usr/lib/jvm/jdk-17.0.0.1
+    test -d $JAVA_HOME/bin; and fish_add_path --move --prepend $JAVA_HOME/bin
+end
+
+# === === === === ===
 # Android SDK
 # === === === === ===
-set -gx ANDROID_HOME $HOME/Android/Sdk
+set -gx ANDROID_HOME $HOME/android/sdk
 
-# Agregar las rutas de herramientas al PATH
-set -gx PATH $ANDROID_HOME/emulator $PATH
-set -gx PATH $ANDROID_HOME/tools $PATH
-set -gx PATH $ANDROID_HOME/tools/bin $PATH
-set -gx PATH $ANDROID_HOME/platform-tools $PATH
+# Rutas de herramientas del SDK. `tools/` y `tools/bin` están obsoletos:
+# su reemplazo es cmdline-tools/latest/bin (sdkmanager, avdmanager).
+# fish_add_path omite los directorios que aún no existen.
+fish_add_path -g $ANDROID_HOME/cmdline-tools/latest/bin
+fish_add_path -g $ANDROID_HOME/emulator
+fish_add_path -g $ANDROID_HOME/platform-tools
+
+# === === === === ===
+# MPD / MPC (Socket Unix de bajo consumo)
+# === === === === ===
+if test -S $HOME/.local/state/mpd/socket
+    set -gx MPD_HOST $HOME/.local/state/mpd/socket
+end

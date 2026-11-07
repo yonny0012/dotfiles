@@ -47,3 +47,6 @@ end
 if type -q starship
     starship init fish | source
 end
+
+# kimi-code (~/.local/bin, que pide el instalador de Antigravity, ya está en 00-env.fish)
+fish_add_path -g ~/.kimi-code/bin
