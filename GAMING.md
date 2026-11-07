@@ -65,7 +65,7 @@ peor integración de mandos y rutas.
 
 | Descartado | Motivo |
 |-----------|--------|
-| `wine` / `wine-staging` del sistema | Reemplazado por `wine` **no figura en testing** ahora mismo, y Proton/Wine-GE ya traen su propio Wine versionado por juego. Un wine de sistema solo agrega conflictos de prefijo. |
+| `wine` / `wine-staging` del sistema | `wine` **no figura en testing** ahora mismo, y Proton/Wine-GE ya traen su propio Wine versionado por juego. Un wine de sistema solo agrega conflictos de prefijo. |
 | `lutris` | No está en testing. Si se necesita más adelante: Flatpak. |
 | `gamescope` | **No está en testing.** Se puede construir, pero en una iGPU de 15 W el compositor anidado cuesta más de lo que aporta; FSR interno de Proton hace el mismo trabajo sin capa extra. |
 | `scx-scheds`, `ananicy-cpp` | No están en testing. Cambiar el scheduler del sistema afecta a todos los procesos, incluido el desarrollo. |
@@ -75,8 +75,10 @@ peor integración de mandos y rutas.
 
 ## ⚙️ Lo importante: no tocar el rendimiento de desarrollo
 
-La regla del setup es **todo opt-in por proceso**. Nada de esto vive en el
-arranque del sistema ni en `/etc/sysctl.d`:
+La regla del setup de gaming es **todo opt-in por proceso**: `setup-gaming.sh`
+no agrega nada al arranque del sistema ni a `/etc/sysctl.d`. (El ajuste general
+de memoria, red y zram es aparte: lo aplica el paso 8 de `setup-system.sh` y
+está documentado en la sección "Rendimiento del sistema" del README.)
 
 - **GameMode solo actúa con `gamemoderun`.** Sin ese prefijo, el gobernador,
   el nice y la prioridad de I/O quedan intactos para IDEs, compiladores,
@@ -85,9 +87,11 @@ arranque del sistema ni en `/etc/sysctl.d`:
   la CPU a tope le quita watts a la gráfica y provoca throttling: menos fps y
   más calor. `desiredgov=powersave` deja trabajar a HWP, que ya sube a turbo
   bajo carga. (En un desktop con GPU dedicada sí conviene `performance`.)
-- **No se tocó `vm.swappiness`, THP, mitigaciones ni governor global.** Son
-  los ajustes típicos de "gaming tuning" que en un 15 W sólo empeoran la
-  latencia de compilación y de contenedores.
+- **El gaming no toca `vm.swappiness`, THP, mitigaciones ni el governor
+  global.** Son los ajustes típicos de "gaming tuning" que en un 15 W sólo
+  empeoran la latencia de compilación y de contenedores. Los valores que sí
+  tiene el sistema (`vm.swappiness=100` por zram, THP en `madvise`) vienen del
+  setup general y no se cambian para jugar.
 - **`vm.max_map_count` ya está en 1048576**, el valor que pide Proton. No hay
   nada que cambiar.
 
