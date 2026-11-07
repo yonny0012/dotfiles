@@ -32,28 +32,28 @@ PURGE=('cinnamon*' 'nemo*' muffin muffin-common cjs metacity metacity-common
        gnome-online-accounts gnome-online-accounts-gtk gnome-backgrounds
        mate-icon-theme xdg-desktop-portal-xapp)
 
-echo "==> [1/7] Protegiendo paquetes necesarios"
+echo "==> [1/8] Protegiendo paquetes necesarios"
 sudo apt-mark manual "${KEEP[@]}"
 
-echo "==> [2/7] Instalando dependencias"
+echo "==> [2/8] Instalando dependencias"
 sudo apt-get update
 sudo apt-get install -y "${PKGS[@]}" "${EWW_BUILD[@]}"
 # Dependencias de compilación de waybar (requiere deb-src habilitado)
 sudo apt-get build-dep -y waybar
 
-echo "==> [3/7] Eliminando Cinnamon y aplicaciones GNOME"
+echo "==> [3/8] Eliminando Cinnamon y aplicaciones GNOME"
 sudo apt-get purge -y "${PURGE[@]}"
 
-echo "==> [4/7] Dependencias huérfanas (revisa la lista antes de confirmar)"
+echo "==> [4/8] Dependencias huérfanas (revisa la lista antes de confirmar)"
 sudo apt-get autoremove --purge
 
-echo "==> [5/7] Shell y terminal por defecto"
+echo "==> [5/8] Shell y terminal por defecto"
 sudo chsh -s /usr/bin/fish "$USER_NAME"
 sudo update-alternatives --install /usr/bin/x-terminal-emulator \
     x-terminal-emulator "$USER_HOME/.local/bin/kitty" 60
 sudo update-alternatives --set x-terminal-emulator "$USER_HOME/.local/bin/kitty"
 
-echo "==> [6/7] Compilando eww (Wayland)"
+echo "==> [6/8] Compilando eww (Wayland)"
 EWW_SRC="${EWW_SRC:-/tmp/eww}"
 [ -d "$EWW_SRC" ] || git clone https://github.com/elkowar/eww "$EWW_SRC"
 export PATH="$USER_HOME/.cargo/bin:$PATH"
@@ -64,7 +64,7 @@ install -Dm755 "$EWW_SRC/target/release/eww" "$USER_HOME/.local/bin/eww"
 # El waybar 0.15.0 de Debian no habla el protocolo de dispatch de Hyprland con
 # config Lua (los clics en workspaces no hacen nada); el soporte está en git.
 # Se instala en ~/.local, que va antes que /usr/bin en el PATH de Hyprland.
-echo "==> [7/7] Compilando waybar (git)"
+echo "==> [7/8] Compilando waybar (git)"
 WAYBAR_SRC="${WAYBAR_SRC:-/tmp/waybar}"
 [ -d "$WAYBAR_SRC" ] || git clone https://github.com/Alexays/Waybar "$WAYBAR_SRC"
 (cd "$WAYBAR_SRC" \
@@ -72,5 +72,39 @@ WAYBAR_SRC="${WAYBAR_SRC:-/tmp/waybar}"
         -Dtests=disabled -Dsystemd=disabled --reconfigure \
     && meson install -C build --skip-subprojects)
 "$USER_HOME/.local/bin/waybar" --version
+
+# Rendimiento: memoria, red, OOM y térmica. Detalle y documentación en el
+# README (sección "Rendimiento del sistema"). Los archivos viven en
+# scripts/system/etc/ y se copian tal cual a /etc.
+echo "==> [8/8] Optimización de rendimiento"
+SYS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/system/etc"
+sudo apt-get install -y earlyoom thermald irqbalance zram-tools
+for f in sysctl.d/99-performance.conf default/earlyoom \
+         tmpfiles.d/thp-madvise.conf modules-load.d/bbr.conf; do
+    sudo install -Dm644 "$SYS_DIR/$f" "/etc/$f"
+done
+sudo modprobe tcp_bbr
+sudo sysctl --system > /dev/null
+sudo systemd-tmpfiles --create /etc/tmpfiles.d/thp-madvise.conf
+sudo systemctl enable --now thermald.service irqbalance.service
+sudo systemctl restart earlyoom.service
+# zstd comprime más que lz4; aplica en el próximo arranque (reiniciar zram
+# con swap en uso puede congelar el equipo).
+sudo sed -i 's/^#\?ALGO=.*/ALGO=zstd/' /etc/default/zramswap
+# noatime en la raíz: evita una escritura por cada lectura de archivo.
+if ! findmnt -no OPTIONS / | grep -qw noatime; then
+    sudo cp /etc/fstab "/etc/fstab.bak.$(date +%Y%m%d%H%M%S)"
+    sudo sed -i -E '/^[^#[:space:]]+[[:space:]]+\/[[:space:]]/ s/^([^[:space:]]+[[:space:]]+\/[[:space:]]+[^[:space:]]+[[:space:]]+)([^[:space:]]+)/\1noatime,\2/' /etc/fstab
+    sudo findmnt --verify --tab-file /etc/fstab > /dev/null
+    sudo mount -o remount,noatime /
+fi
+# Servicios que no hacen falta al arranque en este equipo (se omiten si no
+# existen). Docker y Odoo se arrancan a mano: sudo systemctl start docker|odoo
+for unit in ModemManager.service avahi-daemon.service avahi-daemon.socket \
+            odoo.service docker.service docker.socket containerd.service; do
+    if systemctl list-unit-files "$unit" --no-legend | grep -q .; then
+        sudo systemctl disable "$unit"
+    fi
+done
 
 echo "✅ Listo. Cierra sesión y vuelve a entrar para aplicar shell y autostart."

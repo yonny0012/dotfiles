@@ -54,6 +54,9 @@ Un repositorio modular, minimalista y glassmórfico gestionado con **GNU Stow**.
 │   └── .config/zellij/
 ├── starship/           # Prompt
 │   └── .config/
+├── scripts/            # Setup del sistema (requiere sudo)
+│   ├── setup-system.sh # Dependencias, eww/waybar desde git y rendimiento
+│   └── system/etc/     # Configuración de sistema que se copia a /etc
 └── README.md           # Este archivo
 ```
 
@@ -212,6 +215,76 @@ killall -q xdg-desktop-portal-hyprland xdg-desktop-portal-gnome xdg-desktop-port
 sleep 2
 /usr/lib/xdg-desktop-portal &
 ```
+
+---
+
+## ⚡ Rendimiento del sistema
+
+Ajustes para un portátil con poca RAM (i5-8250U, 12 GB, SSD ext4, zram). Los
+aplica el paso `[8/8]` de `scripts/setup-system.sh`; los archivos están en
+`scripts/system/etc/` y se copian a `/etc`.
+
+```bash
+bash ~/dotfiles/scripts/setup-system.sh   # completo
+```
+
+### Paquetes
+
+| Paquete | Para qué | Configuración | Documentación |
+|---------|----------|---------------|---------------|
+| `zram-tools` | Swap comprimida en RAM, prioridad sobre la swap en disco | `/etc/default/zramswap` → `ALGO=zstd`, `PERCENT=50` | [Kernel: zram](https://docs.kernel.org/admin-guide/blockdev/zram.html) · [Debian](https://packages.debian.org/sid/zram-tools) · [ArchWiki](https://wiki.archlinux.org/title/Zram) |
+| `earlyoom` | Cierra el proceso más pesado antes de que el sistema se congele | `/etc/default/earlyoom` | [rfjakob/earlyoom](https://github.com/rfjakob/earlyoom) |
+| `thermald` | Control térmico de Intel: limita antes de llegar al throttling brusco | por defecto | [intel/thermal_daemon](https://github.com/intel/thermal_daemon) |
+| `irqbalance` | Reparte las interrupciones entre los 8 hilos | por defecto | [Irqbalance/irqbalance](https://github.com/Irqbalance/irqbalance) |
+
+### Parámetros del kernel (`/etc/sysctl.d/99-performance.conf`)
+
+| Parámetro | Valor | Por qué |
+|-----------|-------|---------|
+| `vm.swappiness` | `100` | zram es el primer nivel de swap: comprimir en RAM es más barato que descartar caché y releer del disco |
+| `vm.page-cluster` | `0` | zram no tiene coste de búsqueda; leer de a una página reduce latencia |
+| `vm.vfs_cache_pressure` | `50` | Retiene más metadatos del sistema de archivos en caché |
+| `vm.dirty_ratio` / `vm.dirty_background_ratio` | `10` / `5` | Escrituras más pequeñas y frecuentes, sin bloqueos largos de I/O |
+| `net.core.default_qdisc` + `net.ipv4.tcp_congestion_control` | `fq` + `bbr` | Mejor rendimiento en redes reales ([google/bbr](https://github.com/google/bbr)) |
+| `net.ipv4.tcp_fastopen` | `3` | Fast Open como cliente y servidor |
+| `kernel.nmi_watchdog` | `0` | Libera un contador de rendimiento; innecesario en escritorio |
+
+Documentación: [vm](https://docs.kernel.org/admin-guide/sysctl/vm.html) ·
+[red (ip-sysctl)](https://docs.kernel.org/networking/ip-sysctl.html) ·
+[kernel](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+
+### Otros ajustes
+
+| Ajuste | Archivo | Documentación |
+|--------|---------|---------------|
+| Transparent Huge Pages en `madvise` (evita picos de latencia de `always`) | `/etc/tmpfiles.d/thp-madvise.conf` | [Kernel: THP](https://docs.kernel.org/admin-guide/mm/transhuge.html) |
+| Módulo `tcp_bbr` cargado al arranque | `/etc/modules-load.d/bbr.conf` | [Kernel: ip-sysctl](https://docs.kernel.org/networking/ip-sysctl.html) |
+| `noatime` en `/` (sin escritura por cada lectura) | `/etc/fstab` | [Kernel: ext4](https://docs.kernel.org/admin-guide/ext4.html) · [ArchWiki: fstab](https://wiki.archlinux.org/title/Fstab) |
+| Sin arranque automático: ModemManager, avahi, Odoo, Docker/containerd | `systemctl disable` | — |
+
+Docker y Odoo se arrancan cuando hacen falta: `sudo systemctl start docker` / `sudo systemctl start odoo`.
+
+Guía general: [ArchWiki: Improving performance](https://wiki.archlinux.org/title/Improving_performance).
+
+### Verificar
+
+```bash
+/usr/sbin/sysctl vm.swappiness vm.page-cluster net.ipv4.tcp_congestion_control
+cat /sys/kernel/mm/transparent_hugepage/enabled   # [madvise]
+findmnt -no OPTIONS /                             # noatime
+cat /sys/block/zram0/comp_algorithm               # [zstd] tras reiniciar
+systemctl is-active earlyoom thermald irqbalance
+```
+
+### Notas
+
+- **earlyoom:** systemd separa `$EARLYOOM_ARGS` por espacios y pasa las comillas
+  literalmente, así que las regex de `--avoid`/`--prefer` van sin comillas ni espacios.
+- **zram:** el cambio de algoritmo aplica al reiniciar; reiniciar `zramswap` con
+  swap en uso puede congelar el equipo.
+- **`apt-get update` falla:** un repositorio que no publica la suite pedida
+  rompe todo el update (y el script, por `set -e`). Ejemplo: OpenVPN3 no publica
+  `forky`; usar `Suites: trixie` en `/etc/apt/sources.list.d/openvpn3.sources`.
 
 ---
 
