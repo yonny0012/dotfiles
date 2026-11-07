@@ -75,9 +75,9 @@ WAYBAR_SRC="${WAYBAR_SRC:-/tmp/waybar}"
 
 # Rendimiento: memoria, red, OOM y térmica. Detalle y documentación en el
 # README (sección "Rendimiento del sistema"). Los archivos viven en
-# scripts/system/etc/ y se copian tal cual a /etc.
+# system/etc/ y se copian tal cual a /etc.
 echo "==> [8/8] Optimización de rendimiento"
-SYS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/system/etc"
+SYS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/system/etc"
 sudo apt-get install -y earlyoom thermald irqbalance zram-tools
 for f in sysctl.d/99-performance.conf default/earlyoom \
          tmpfiles.d/thp-madvise.conf modules-load.d/bbr.conf; do

@@ -8,7 +8,7 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BACKGROUND_SRC="$DOTFILES_DIR/wallpapers/Pictures/wallpapers/background.jpg"
-GREETER_SRC="$DOTFILES_DIR/lightdm/slick-greeter.conf"
+GREETER_SRC="$DOTFILES_DIR/system/etc/lightdm/slick-greeter.conf"
 
 for f in "$BACKGROUND_SRC" "$GREETER_SRC"; do
     [ -f "$f" ] || { echo "Error: no existe $f"; exit 1; }

@@ -54,13 +54,21 @@ Un repositorio modular, minimalista y glassmórfico gestionado con **GNU Stow**.
 │   └── .config/zellij/
 ├── starship/           # Prompt
 │   └── .config/
-├── scripts/            # Setup del sistema (requiere sudo)
+├── scripts/            # Setup del sistema (requiere sudo) — no es paquete Stow
 │   ├── setup-system.sh # Dependencias, eww/waybar desde git y rendimiento
-│   └── system/etc/     # Configuración de sistema que se copia a /etc
+│   └── install-ui-assets.sh # Greeter de LightDM y fondo
+├── system/             # Archivos de /etc — no es paquete Stow
+│   └── etc/            # lightdm, sysctl, earlyoom, THP, BBR (se copian con los scripts)
 └── README.md           # Este archivo
 ```
 
 > **Regla de oro:** cada aplicación en su propio paquete Stow. Sin secretos en el repo.
+
+> **`~` vs `/etc`:** los paquetes Stow solo contienen rutas relativas a `$HOME`.
+> Lo que va en `/etc` vive en `system/etc/` con la misma ruta que tendrá en el
+> sistema, y los scripts lo **copian** (`install -Dm644`), no lo enlazan: `$HOME`
+> es `700` y los servicios del sistema no pueden leerlo, y un enlace dejaría
+> configuración de root editable por el usuario.
 
 ---
 
@@ -90,8 +98,8 @@ sudo apt install -y stow hyprland waybar wofi neovim fish kitty zellij starship 
 ### 3. Desplegar configuraciones con Stow
 
 ```bash
-# Desplegar todo
-stow */
+# Desplegar todo (excepto scripts/ y system/, que no van en $HOME)
+stow $(ls -d */ | grep -Ev '^(scripts|system)/$')
 
 # O desplegar paquetes individuales
 stow hypr waybar wofi nvim fish kitty zellij starship
@@ -222,7 +230,7 @@ sleep 2
 
 Ajustes para un portátil con poca RAM (i5-8250U, 12 GB, SSD ext4, zram). Los
 aplica el paso `[8/8]` de `scripts/setup-system.sh`; los archivos están en
-`scripts/system/etc/` y se copian a `/etc`.
+`system/etc/` y se copian a `/etc`.
 
 ```bash
 bash ~/dotfiles/scripts/setup-system.sh   # completo
