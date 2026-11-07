@@ -44,16 +44,21 @@ fish_add_path -g ~/.local/bin
 # Java (JDK)
 # === === === === ===
 # JAVA_HOME fijado a JDK 17 (Android/Odoo) aunque haya otros JDK instalados.
+# Si ese JDK no existe, JAVA_HOME queda sin definir y las herramientas usan el
+# `java` del PATH (un JAVA_HOME inválido rompe Gradle y sdkmanager).
 # Para seguir al `java` activo de update-alternatives, usar la línea comentada.
-if type -q java
+set -l jdk17 /usr/lib/jvm/jdk-17.0.0.1
+if type -q java; and test -x $jdk17/bin/java
     # set -gx JAVA_HOME (path resolve (command -v java) | path dirname | path dirname)
-    set -gx JAVA_HOME /usr/lib/jvm/jdk-17.0.0.1
-    test -d $JAVA_HOME/bin; and fish_add_path --move --prepend $JAVA_HOME/bin
+    set -gx JAVA_HOME $jdk17
+    fish_add_path --move --prepend $JAVA_HOME/bin
 end
 
 # === === === === ===
 # Android SDK
 # === === === === ===
+# SDK instalado a mano en ~/android/sdk, no en ~/Android/Sdk (la ruta por
+# defecto de Android Studio). Si se usa Android Studio, cambiar esta línea.
 set -gx ANDROID_HOME $HOME/android/sdk
 
 # Rutas de herramientas del SDK. `tools/` y `tools/bin` están obsoletos:
