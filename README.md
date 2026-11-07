@@ -107,7 +107,7 @@ sudo apt install -y stow hyprland waybar wofi neovim fish kitty zellij starship 
 stow $(ls -d */ | grep -Ev '^(scripts|system)/$')
 
 # O desplegar paquetes individuales
-stow hypr waybar wofi nvim fish kitty zellij starship
+stow hypr waybar swaync wofi nvim fish kitty zellij starship
 ```
 
 ### 4. Cambiar shell por defecto a Fish
