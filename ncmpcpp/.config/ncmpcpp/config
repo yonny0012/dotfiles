@@ -1,0 +1,86 @@
+# ==============================================================================
+# NCMPCPP Configuration
+# Arquitectura: GNU Stow Modular Setup (Debian / Hyprland)
+# Tema: Catppuccin Macchiato (armonizado con Kitty, Fish y Waybar)
+# Optimizado para: Bajo consumo energético, cero overhead innecesario y fluidez
+# ==============================================================================
+
+# --- [ Conexión con MPD ] -----------------------------------------------------
+mpd_host = "127.0.0.1"
+mpd_port = "6600"
+mpd_music_dir = "~/Music"
+mpd_connection_timeout = "5"
+mpd_crossfade_time = "2"
+
+# --- [ Optimización de Consumo y Rendimiento (Low Power) ] -------------------
+# Retrasa la petición de datos hasta que el cursor se detiene (ahorra IPC en scroll rápido)
+data_fetching_delay = "yes"
+# No consultar continuamente el bitrate para evitar I/O redundante
+display_bitrate = "no"
+# Desactivar reloj con segundos para evitar re-dibujados cada segundo
+clock_display_seconds = "no"
+# Desactivar desplazamiento de texto en la cabecera (evita ticks constantes de CPU)
+header_text_scrolling = "no"
+# Desactivar soporte de ratón para ahorrar interrupciones
+mouse_support = "no"
+
+# --- [ Visualizador de Ondas / Espectro ] -------------------------------------
+# Conectado a la salida FIFO configurada en mpd.conf
+visualizer_data_source = "/tmp/mpd.fifo"
+visualizer_output_name = "Visualizer Feed"
+visualizer_in_stereo = "yes"
+visualizer_type = "spectrum"
+visualizer_look = "●▮"
+# Limitar a 30 FPS para evitar alto consumo de CPU en segundo plano
+visualizer_fps = 30
+visualizer_autoscale = "yes"
+visualizer_color = "blue,cyan,green,yellow,magenta,red"
+
+# --- [ Interfaz de Usuario & Estilo Catppuccin Macchiato ] -------------------
+user_interface = "classic"
+header_visibility = "yes"
+statusbar_visibility = "yes"
+titles_visibility = "yes"
+cyclic_scrolling = "yes"
+lines_scrolled = "1"
+autocenter_mode = "yes"
+centered_cursor = "yes"
+
+# Formato de barra de progreso
+progressbar_look = "━━─"
+
+# Formato de canciones en lista y estado
+song_list_format = "$8%a $2- $5%t$R$7%l"
+song_status_format = "$b$7%t$/b $8por $5%a $8($4%album$8)"
+song_columns_list_format = "(25)[blue]{a} (45)[white]{t} (20)[magenta]{b} (10)[cyan]{l}"
+
+# Colores (Alineados con la paleta Catppuccin Macchiato)
+colors_enabled = "yes"
+empty_tag_color = "black"
+header_window_color = "blue"
+volume_color = "yellow"
+state_line_color = "black"
+state_flags_color = "magenta"
+main_window_color = "default"
+progressbar_color = "black"
+progressbar_elapsed_color = "magenta"
+statusbar_color = "cyan"
+statusbar_time_color = "magenta"
+player_state_color = "magenta"
+alternative_ui_separator_color = "black"
+window_border_color = "blue"
+active_window_border = "magenta"
+
+# Elemento seleccionado / reproduciendo actualmente
+current_item_prefix = "$(magenta)$r"
+current_item_suffix = "$/r$(end)"
+current_item_inactive_column_prefix = "magenta"
+current_item_inactive_column_suffix = "$/r$(end)"
+
+# --- [ Modos de visualización ] -----------------------------------------------
+default_place_to_search_in = "database"
+search_engine_display_mode = "columns"
+playlist_display_mode = "columns"
+browser_display_mode = "columns"
+playlist_editor_display_mode = "columns"
+discard_colors_if_item_is_selected = "yes"

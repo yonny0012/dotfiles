@@ -6,11 +6,12 @@
 eww_debug.log
 *.log
 
-# Ignore all mpd files by default (logs, state, database, etc.)
+# Ignore all mpd runtime and database files (XDG managed)
 mpd/.config/mpd/state
 mpd/.config/mpd/log
 mpd/.config/mpd/database
-mpd/.config/mpd/state
+mpd/.config/mpd/pid
+mpd/.config/mpd/socket
 mpd/.config/mpd/sticker.sql
 
 # Except the main configuration file

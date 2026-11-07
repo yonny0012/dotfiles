@@ -1,0 +1,47 @@
+# ==============================================================================
+# NCMPCPP Keybindings
+# Arquitectura: GNU Stow Modular Setup (Debian / Hyprland)
+# Navegación estilo Vim (j/k, g/G) y controles intuitivos
+# ==============================================================================
+
+# --- [ Navegación estilo Vim ] ------------------------------------------------
+def_key "j"
+  scroll_down
+
+def_key "k"
+  scroll_up
+
+def_key "ctrl-u"
+  page_up
+
+def_key "ctrl-d"
+  page_down
+
+def_key "g"
+  move_home
+
+def_key "G"
+  move_end
+
+# --- [ Control de Reproducción ] ----------------------------------------------
+def_key "space"
+  pause
+
+def_key "s"
+  stop
+
+def_key ">"
+  next
+
+def_key "<"
+  previous
+
+def_key "f"
+  seek_forward
+
+def_key "b"
+  seek_backward
+
+# --- [ Pantallas & Vistas ] ---------------------------------------------------
+def_key "v"
+  show_visualizer

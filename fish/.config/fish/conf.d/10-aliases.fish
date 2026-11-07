@@ -50,3 +50,11 @@ alias gd="git diff"
 
 alias st="stow --target=\$HOME"
 alias unst="stow --delete --target=\$HOME"
+
+# --- [ Música / MPD & MPC ] ---------------------------------------------------
+if type -q mpc
+    alias play="mpc toggle"
+    alias next="mpc next"
+    alias prev="mpc prev"
+    alias song="mpc current"
+end
